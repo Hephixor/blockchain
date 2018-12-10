@@ -6,6 +6,9 @@ import java.security.NoSuchAlgorithmException;
 
 public class Hash {
 
+	
+	///////////////CORE METHODS///////////////////
+	
 	/**
 	 * 
 	 * @param data tableau de bytes à hasher.
@@ -14,17 +17,6 @@ public class Hash {
 	 */
 	public static byte[] digest(byte[] data) throws NoSuchAlgorithmException {
 		return MessageDigest.getInstance("SHA-256").digest(data);		
-	}
-	
-	/**
-	 * 
-	 * @param data String à hasher.
-	 * @return hash sur 256 bits à stocker dans un noeud de Merkle Tree.
-	 * @throws UnsupportedEncodingException 
-	 * @throws NoSuchAlgorithmException 
-	 */
-	public static byte[] digest(String data) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-		return digest(data.getBytes("UTF-8"));
 	}
 	
 	/**
@@ -38,6 +30,51 @@ public class Hash {
 	public static byte[] digest(byte[] hash1, byte[] hash2) throws NoSuchAlgorithmException {
 		return digest(concat(hash1, hash2));
 	}
+	
+	
+	////////////////OVERLOAD METHODS///////////////////
+	
+	/**
+	 * 
+	 * @param data String à hasher.
+	 * @return hash sur 256 bits à stocker dans un noeud de Merkle Tree.
+	 * @throws UnsupportedEncodingException 
+	 * @throws NoSuchAlgorithmException 
+	 */
+	public static byte[] digest(String data) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		return digest(data.getBytes("UTF-8"));
+	}
+	
+	/**
+	 * produit les hashs des données byte[] en paramètres.
+	 * @param datas tableau de données byte[] à hasher.
+	 * @return tableau de hashs sur 256 bits chacun.
+	 * @throws NoSuchAlgorithmException
+	 */
+	public static byte[][] digest(byte[][] datas) throws NoSuchAlgorithmException {
+		byte[][] hashs = new byte[datas.length][];
+		for(int i=0; i<datas.length; i++) {
+			hashs[i] = digest(datas[i]); 
+		}
+		return hashs;
+	}
+	
+	/**
+ 	 * produit les hashs des données String en paramètres.
+	 * @param datas tableau de données String à hasher.
+	 * @return tableau de hashs sur 256 bits chacun.
+	 * @throws NoSuchAlgorithmException
+	 * @throws UnsupportedEncodingException
+	 */
+	public static byte[][] digest(String[] datas) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		byte[][] hashs = new byte[datas.length][];
+		for(int i=0; i<datas.length; i++) {
+			hashs[i] = digest(datas[i]); 
+		}
+		return hashs;
+	}
+	
+	////////////////UTILS METHODS//////////////////////
 	
 	/**
 	 * https://stackoverflow.com/a/5513188

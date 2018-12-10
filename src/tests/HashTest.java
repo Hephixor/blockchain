@@ -28,6 +28,22 @@ public class HashTest {
 		System.out.println("\n"+ Hash.bytesToHex(hashConcat));
 		System.out.println(Hash.bytesToHex(hashConcat).length() +" char");
 		System.out.println(hashConcat.length +" bytes");
+		
+		byte[][] datas = {t1.getBytes("UTF-8"), t2.getBytes("UTF-8"), t3.getBytes("UTF-8")};
+		byte[][] hashs = Hash.digest(datas);
+		
+		System.out.println(" ");
+		for(int i=0; i<hashs.length; i++) {
+			System.out.println(Hash.bytesToHex(hashs[i]));
+		}
+		
+		String[] datasString = {t1, t2, t3};
+		byte[][] hashsString = Hash.digest(datasString);
+		
+		System.out.println(" ");
+		for(int i=0; i<hashs.length; i++) {
+			System.out.println(Hash.bytesToHex(hashsString[i]));
+		}
 	}
 
 }
