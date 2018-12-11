@@ -1,6 +1,5 @@
 package merkle;
 
-import java.security.NoSuchAlgorithmException;
 
 public class Node {
 
@@ -23,9 +22,8 @@ public class Node {
 	 * Constructeur pour créer un noeud à partir de deux noeuds fils.
 	 * @param leftChild fils gauche.
 	 * @param rightChild fils droit.
-	 * @throws NoSuchAlgorithmException 
 	 */
-	public Node(Node leftChild, Node rightChild) throws NoSuchAlgorithmException {
+	public Node(Node leftChild, Node rightChild) {
 		this.leftChild = leftChild;
 		this.rightChild = rightChild;
 		this.hash = Hash.digest(leftChild.getHash(), rightChild.getHash());
@@ -61,9 +59,8 @@ public class Node {
 	 * Construit un arbre de Merkle à partir d'un tableau de hashs.
 	 * @param hashs Tableau de hashs
 	 * @return Racine de l'arbre de Merkle représentant le tableau de hashs passé en paramètres.
-	 * @throws NoSuchAlgorithmException
 	 */
-	public static Node merkleTree(byte[][] hashs) throws NoSuchAlgorithmException {
+	public static Node merkleTree(byte[][] hashs){
 		Node[] leaves = new Node[hashs.length];
 		
 		for(int i=0; i<hashs.length; i++) {
@@ -77,9 +74,8 @@ public class Node {
 	 * Fonction récursive qui produit un arbre de Merkle à partir d'un tableau de noeuds feuilles.
 	 * @param nodes Les noeuds feuilles de l'arbre.
 	 * @return le noeud racine de l'arbre.
-	 * @throws NoSuchAlgorithmException
 	 */
-	private static Node merkleTreeRec(Node[] nodes) throws NoSuchAlgorithmException {
+	private static Node merkleTreeRec(Node[] nodes)  {
 		/*cas terminal*/
 		if(nodes.length == 1) {
 			return nodes[0];
