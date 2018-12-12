@@ -1,28 +1,35 @@
 package merkle;
 
 import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 
 public class Hash {
 
+	private static String algorithm = "HmacSHA256";
+	private static String key = "256bitsKey-ABCDEFGHIJKLMNOPQRSTU";
 
 	///////////////CORE METHODS///////////////////
 
 	/**
-	 * 
+	 * Hash un tableau de bytes avec Hmac SHA-256.
 	 * @param data tableau de bytes à hasher.
 	 * @return hash sur 256 bits à stocker dans un noeud de Merkle Tree.
-	 * @throws NoSuchAlgorithmException 
 	 */
 	public static byte[] digest(byte[] data) {
-		byte[] hash = null;
+		//byte[] hash = MessageDigest.getInstance("SHA-256").digest(data);
+		
+	    Mac hasher = null;
+	    
 		try {
-			hash = MessageDigest.getInstance("SHA-256").digest(data);		
+			hasher = Mac.getInstance(algorithm);
+			hasher.init(new SecretKeySpec(key.getBytes("UTF-8"), algorithm));
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		catch(NoSuchAlgorithmException err) {
-			err.printStackTrace();
-		}
+    
+	    byte[] hash = hasher.doFinal(data);
+		
 		return hash;
 	}
 
@@ -42,9 +49,8 @@ public class Hash {
 
 	/**
 	 * 
-	 * @param data String à hasher.
+	 * @param data String à hasher. Ne doit pas être null.
 	 * @return hash sur 256 bits à stocker dans un noeud de Merkle Tree.
-	 * @throws UnsupportedEncodingException 
 	 */
 	public static byte[] digest(String data) {
 		byte[] digest = null;

@@ -1,6 +1,7 @@
 package tests;
 
 import merkle.Hash;
+import merkle.Merkle;
 import merkle.Node;
 
 public class NodeTest {
@@ -32,7 +33,7 @@ public class NodeTest {
 			System.out.println(Hash.bytesToHex(n2.getHash()));
 			System.out.println(n2.isLeaf());
 
-			Node n3 = new Node(n2);
+			Node n3 = n2;
 			System.out.println(" ");
 			System.out.println(Hash.bytesToHex(Hash.digest(hashs[0], hashs[1])));
 			System.out.println(Hash.bytesToHex(n3.getHash()));
@@ -66,7 +67,7 @@ public class NodeTest {
 			byte[] rootHash_expected = Hash.digest(grand_parent0, grand_parent1);
 
 			/* réponse produite */
-			byte[] rootHash_producted = Node.merkleTree(hashs).getHash();
+			byte[] rootHash_producted = Merkle.merkleTree(hashs).getHash();
 
 			/* check */
 			System.out.println(Hash.bytesToHex(rootHash_expected));
@@ -106,7 +107,7 @@ public class NodeTest {
 			byte[] rootHash_expected = Hash.digest(arr_grd_parent0, arr_grd_parent1);
 
 			/* réponse produite */
-			byte[] rootHash_producted = Node.merkleTree(hashs).getHash();
+			byte[] rootHash_producted = Merkle.merkleTree(hashs).getHash();
 
 			/* check */
 			System.out.println(Hash.bytesToHex(rootHash_expected));
@@ -147,7 +148,7 @@ public class NodeTest {
 			byte[] rootHash_expected = Hash.digest(arr_grd_parent0, arr_grd_parent1);
 			
 			/* réponse produite */
-			byte[] rootHash_producted = Node.merkleTree(hashs).getHash();
+			byte[] rootHash_producted = Merkle.merkleTree(hashs).getHash();
 			
 			/* check */
 			System.out.println(Hash.bytesToHex(rootHash_expected));
