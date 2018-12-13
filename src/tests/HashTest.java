@@ -8,6 +8,8 @@ import java.util.Arrays;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import merkle.Bytes;
 import merkle.Hash;
 
 class HashTest {
@@ -41,36 +43,12 @@ class HashTest {
 		byte[] h2 = Hash.digest(b2);
 		
 		System.out.println("\n/*---------- digest(byte[] data) ----------*/");
-		System.out.println("h1: "+ Hash.bytesToHex(h1));
-		System.out.println("h1b:"+ Hash.bytesToHex(h1bis));
-		System.out.println("h2: "+ Hash.bytesToHex(h2));
+		System.out.println("h1: "+ Bytes.toHex(h1));
+		System.out.println("h1b:"+ Bytes.toHex(h1bis));
+		System.out.println("h2: "+ Bytes.toHex(h2));
 		
 		assertTrue(Arrays.equals(h1, h1bis));
 		assertTrue(!Arrays.equals(h1, h2));
 		assertTrue(h1.length == 32);
-	}
-	
-	@Test
-	void testDigestString() {
-		byte[] hashExpected = Hash.digest(b1);
-		byte[] hashProducted = Hash.digest(s1);
-		
-		System.out.println("\n/*---------- digest(String data) ----------*/");
-		System.out.println("hashExpected: "+ Hash.bytesToHex(hashExpected));
-		System.out.println("hashProducted:"+ Hash.bytesToHex(hashProducted));
-		
-		assertTrue(Arrays.equals(hashExpected, hashProducted));
-	}
-
-	@Test
-	void testDigestByteArrayByteArray() {
-		byte[] hashExpected = Hash.digest(Hash.concat(b1, b2));		
-		byte[] hashProducted = Hash.digest(b1, b2);
-		
-		System.out.println("\n/*---------- digest(byte[] hash1, byte[] hash2) ----------*/");
-		System.out.println("hashExpected: "+ Hash.bytesToHex(hashExpected));
-		System.out.println("hashProducted:"+ Hash.bytesToHex(hashProducted));
-		
-		assertTrue(Arrays.equals(hashExpected, hashProducted));
 	}
 }

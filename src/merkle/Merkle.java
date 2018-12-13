@@ -3,18 +3,33 @@ package merkle;
 public class Merkle {
 
 	/**
-	 * Construit un arbre de Merkle à partir d'un tableau de hashs.
-	 * @param hashs Tableau de hashs
-	 * @return Racine de l'arbre de Merkle représentant le tableau de hashs passé en paramètres.
+	 * Construit un arbre de Merkle à partir d'un tableau de données non hashées.
+	 * @param datas Tableau de données non hashées
+	 * @return Racine de l'arbre de Merkle représentant le tableau de données passé en paramètres.
 	 */
-	public static Node merkleTree(byte[][] hashs){
-		Node[] leaves = new Node[hashs.length];
+	public static Node merkleTree(byte[][] datas){
+		Node[] leaves = new Node[datas.length];
 		
-		for(int i=0; i<hashs.length; i++) {
-			leaves[i] = new Node(hashs[i]);
+		for(int i=0; i<datas.length; i++) {
+			leaves[i] = new Node(datas[i]);
 		}
 		
 		return merkleTreeRec(leaves);
+	}
+	
+	/**
+	 * Construit un arbre de Merkle à partir d'un tableau de Strings non hashées.
+	 * @param datas Tableau de Strings non hashées
+	 * @return Racine de l'arbre de Merkle représentant le tableau de Strings passé en paramètres.
+	 */
+	public static Node merkleTree(String[] datas){
+		byte[][] datasBytesArrays = new byte[datas.length][];
+		
+		for(int i=0; i<datas.length; i++) {
+			datasBytesArrays[i] = Bytes.fromStr(datas[i]);
+		}
+		
+		return merkleTree(datasBytesArrays);
 	}
 	
 	/**

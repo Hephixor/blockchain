@@ -10,12 +10,15 @@ public class Node {
 	
 	/**
 	 * Constructeur pour créer un noeud Feuille.
-	 * @param hash Hash des données que la feuille représente.
+	 * @param data Hash des données que la feuille représente.
 	 */
-	public Node(byte[] hash) {
+	public Node(byte[] data) {
 		leftChild = null;
 		rightChild = null;
-		this.hash = hash;
+		this.hash = Hash.digest(Bytes.concat(
+				Bytes.fromStr("0"),
+				data 
+		));
 	}
 	
 	/**
@@ -26,7 +29,11 @@ public class Node {
 	public Node(Node leftChild, Node rightChild) {
 		this.leftChild = leftChild;
 		this.rightChild = rightChild;
-		this.hash = Hash.digest(leftChild.getHash(), rightChild.getHash());
+		this.hash = Hash.digest(Bytes.concat(
+				Bytes.fromStr("1"),
+				leftChild.getHash(), 
+				rightChild.getHash()
+		));
 	}
 
 	public byte[] getHash() {
@@ -38,7 +45,8 @@ public class Node {
 	}
 	
 	//TODO inutile ?
-	public boolean isLeaf() {
-		return leftChild==null && rightChild==null;
-	}
+//	public boolean isLeaf() {
+//		return leftChild==null && rightChild==null;
+//	}
+
 }
