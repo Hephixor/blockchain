@@ -1,0 +1,5 @@
+Ce test est similaire à "simple_no_operations/simplest", mais contient des operations.
+
+Il y a au maximum une opération par bloc et c'est une création.
+
+La chaîne continent 20 blocs. En tout 6 opérations sont appliquées.

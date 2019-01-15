@@ -1,6 +1,8 @@
 package merkle;
 
 import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -15,20 +17,21 @@ public class Hash {
 	 * @return hash sur 256 bits à stocker dans un noeud de Merkle Tree.
 	 */
 	public static byte[] digest(byte[] data) {
-		//byte[] hash = MessageDigest.getInstance("SHA-256").digest(data);
-		
-	    Mac hasher = null;
-	    
 		try {
-			hasher = Mac.getInstance(algorithm);
-			hasher.init(new SecretKeySpec(Bytes.fromStr(key), algorithm));
-		} catch (Exception e) {
+			MessageDigest md = MessageDigest.getInstance("SHA-256");
+			return md.digest(data);
+		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
-    
-	    byte[] hash = hasher.doFinal(data);
-		
-		return hash;
+		return null;
 	}
 
+    /**
+     * Hash une chaîne de charactères en utilisant l'algorithme SHA-256.
+     * @param data chaîne de charactères à hasher.
+     * @return tableau d'octets représentant un hash sur 256 bits.
+     */
+	public static byte[] digestString(String data) {
+	    return digest(Bytes.fromStr(data));
+    }
 }

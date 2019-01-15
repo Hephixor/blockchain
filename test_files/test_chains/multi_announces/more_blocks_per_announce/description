@@ -1,0 +1,6 @@
+Ce test est similaire à "one_block_per_announce" mais les annonces peuvent
+contenir plus d'un bloc.
+
+Il n'y a aucune opération.
+
+La chaîne continent 10 annonces et 17 blocs au total.

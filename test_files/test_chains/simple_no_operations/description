@@ -1,0 +1,8 @@
+Ce répertoire contient les tests les plus simple.
+
+Je recommande de les essayer dans l'ordre croissant de complexité:
+* simplest
+* with_some_missing_blocks
+* with_two_block_producers
+* with_two_block_producers_and_missing_blocks
+

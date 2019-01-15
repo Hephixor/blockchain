@@ -1,0 +1,5 @@
+Ceci est un test négatif, la sous séquence annoncée contient un bloc invalide.
+Le préfix est valide jusqu'au niveau 5
+
+Le niveau annoncé par la tête est 12, mais le niveau atteint après évaluation
+de cette sous chaîne doit être 5 au temps 8

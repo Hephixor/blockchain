@@ -1,0 +1,5 @@
+Ceci est un test négatif, la sous séquence annoncée n'est pas fournie avec
+suffisement de blocs pour atteindre la génèse.
+
+Le niveau annoncé par la tête est 10, mais le niveau atteint après évaluation
+de cette sous chaîne doit être 0

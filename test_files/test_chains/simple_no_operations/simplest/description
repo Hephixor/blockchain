@@ -1,0 +1,9 @@
+Ceci est le premier test à essayer, c'est la chaîne la plus simple possible.
+
+Elle consisten en une seule annonce de blocs. Cela simule un noeud se
+synchronisant pour la première fois à un réseau actif. Dans ce réseau, il n'y a
+qu'une clef qui puisse signer des blocs. Cette clef a produit des blocs à tous
+les temps. Celà veut dire que que le temps et le niveau augmente d'exactement 1
+à chaque bloc.
+
+La chaîne continent 10 blocs. Les blocs ne contiennent pas d'opérations.

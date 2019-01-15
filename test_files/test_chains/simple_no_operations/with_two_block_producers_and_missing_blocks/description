@@ -1,0 +1,4 @@
+Ce test est similaire à "simplest", mais il y a deux producteurs de blocs, et
+certain blocs manquent.
+
+La chaîne continent 20 blocs. Le niveau final est 10 et le temps final est 15.

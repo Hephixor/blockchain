@@ -1,0 +1,3 @@
+Ce test est similaire à "one_creation_per_block", mais il peut contenir plus d'une création par bloc.
+
+La chaîne continent 32 blocs. En tout 235 opérations sont appliquées.
