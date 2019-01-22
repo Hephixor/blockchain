@@ -16,7 +16,6 @@ import java.security.*;
 import java.security.spec.ECPoint;
 import java.security.spec.ECPublicKeySpec;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.X509EncodedKeySpec;
 
 public class SigningTest {
     final Path SECP_DIR = Paths.get("test_files", "test_crypto", "SECP256R1");
@@ -27,7 +26,7 @@ public class SigningTest {
         byte[] validSignature = Files.readAllBytes(SECP_DIR.resolve("valid_signature"));
         ECNamedCurveParameterSpec spec = ECNamedCurveTable.getParameterSpec("secp256r1");
         KeyFactory keyFactory = KeyFactory.getInstance("EC", new BouncyCastleProvider());
-        ECNamedCurveSpec params = new ECNamedCurveSpec("secp256r1 ", spec.getCurve(), spec.getG(), spec.getN());
+        ECNamedCurveSpec params = new ECNamedCurveSpec("secp256r1", spec.getCurve(), spec.getG(), spec.getN());
         ECPoint point = ECPointUtil.decodePoint(params.getCurve(), publicKeyData);
         ECPublicKeySpec publicKeySpec = new ECPublicKeySpec(point, params);
         PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
