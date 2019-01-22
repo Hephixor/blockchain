@@ -5,8 +5,8 @@ import org.bouncycastle.jce.ECPointUtil;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.jce.spec.ECNamedCurveParameterSpec;
 import org.bouncycastle.jce.spec.ECNamedCurveSpec;
-import org.junit.jupiter.api.Test;
-import static junit.framework.Assert.assertTrue;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -33,6 +33,6 @@ public class SigningTest {
         Signature signature = Signature.getInstance("SHA256withECDSA");
         signature.initVerify(publicKey);
         signature.update(validSignature);
-        assertTrue(signature.verify(validSignature));
+        Assert.assertTrue(signature.verify(validSignature));
     }
-}
+} 
