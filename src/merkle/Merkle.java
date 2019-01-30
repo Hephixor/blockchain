@@ -1,6 +1,33 @@
 package merkle;
 
+import java.util.ArrayList;
+
+import chain.Transaction;
+
 public class Merkle {
+	
+	
+	//TODO replace with our own function using nodes
+	public static String getMerkleRoot(ArrayList<Transaction> transactions) {
+		int count = transactions.size();
+		ArrayList<String> previousTreeLayer = new ArrayList<String>();
+		for(Transaction transaction : transactions) {
+			previousTreeLayer.add(transaction.transactionId);
+		}
+		ArrayList<String> treeLayer = previousTreeLayer;
+		while(count > 1) {
+			treeLayer = new ArrayList<String>();
+			for(int i=1; i < previousTreeLayer.size(); i++) {
+				treeLayer.add(Bytes.toHex(Hash.digestString(previousTreeLayer.get(i-1)  + previousTreeLayer.get(i))).toLowerCase());
+				
+			}
+			count = treeLayer.size();
+			previousTreeLayer = treeLayer;
+		}
+		String merkleRoot = (treeLayer.size() == 1) ? treeLayer.get(0) : "";
+		return merkleRoot;
+}
+	
 
 	/**
 	 * Construit un arbre de Merkle à partir d'un tableau de données non hashées.

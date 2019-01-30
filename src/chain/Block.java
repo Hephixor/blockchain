@@ -1,20 +1,24 @@
 package chain;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import merkle.Bytes;
 import merkle.Hash;
+import merkle.Merkle;
 
 public class Block {
 	private String hash;
 	private String previousHash;
-	private String data; //data simple message
+	private String data; 
 	private long timeStamp; //milliseconds POSIX time
 	private int level; //block level
 	private int nonce;
+	public String merkleRoot;
+	public ArrayList<Transaction> transactions = new ArrayList<Transaction>(); 
 
-	public Block(String data, String previousHash) {
-		this.data = data;
+
+	public Block(String previousHash) {
 		this.previousHash = previousHash;
 		this.timeStamp = new Date().getTime();
 		this.hash = generateHash();
@@ -22,20 +26,38 @@ public class Block {
 	}
 
 	public void mineBlock(int difficulty) {
-		String target = getMiningNonce(difficulty); //Create a string with difficulty * "0" 
+		//TODO change function
+		merkleRoot = Merkle.getMerkleRoot(transactions);
+		
+		String target = getMiningNonce(difficulty); 
 		while(!hash.substring( 0, difficulty).equals(target)) {
 			nonce ++;
 			hash = generateHash();
 		}
 		System.out.println("Block mined with hash : " + hash);
 	}
+	
+	public boolean addTransaction(Transaction transaction) {
+		// Check if transaction is valid / not genesis block
+		
+		if(transaction == null) return false;		
+		if((previousHash != "0")) {
+			if((transaction.processTransaction() != true)) {
+				System.out.println("ERROR Can't add transaction");
+				return false;
+			}
+		}
+		transactions.add(transaction);
+		System.out.println("Transaction added");
+		return true;
+}
 
 	private static String getMiningNonce(int difficulty) {
 		return new String(new char[difficulty]).replace('\0', '0');
 	}
 
 	public String generateHash() {
-		return Bytes.toHex(Hash.digestString(previousHash + Long.toString(timeStamp) + Integer.toString(nonce) + data)).toLowerCase();
+		return Bytes.toHex(Hash.digestString(previousHash + Long.toString(timeStamp) + Integer.toString(nonce) + merkleRoot)).toLowerCase();
 	}
 
 	//Getters ....
