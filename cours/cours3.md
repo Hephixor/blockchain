@@ -33,8 +33,8 @@ non. A la place, on fait remonter le noeud impair dans le tableau de parents dan
 
 ### Règles métiers
 
-![photo1](/cours3_photo1.jpg)
-![photo2](/cours3_photo2.jpg) 
+![photo1](cours3_photo1.jpg)
+![photo2](cours3_photo2.jpg) 
 
 Errata : limits.min <= limits.max
 
