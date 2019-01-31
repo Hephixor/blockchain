@@ -7,15 +7,10 @@ import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.Security;
 import java.security.spec.ECGenParameterSpec;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Wallet {
 	private PrivateKey privateKey;
 	private PublicKey publicKey;
-
-	public HashMap<String,TransactionOutput> UTXOs = new HashMap<String,TransactionOutput>(); //only UTXOs owned by this wallet.
 
 
 	public Wallet(){
@@ -39,46 +34,13 @@ public class Wallet {
 		}
 	}
 
-	// Return value of the wallet
-	public float getBalance() {
-		float total = 0;
-
-		// Check for personal Transaction Outputs unspent
-		for (Map.Entry<String, TransactionOutput> item: BlockChainManager.getUTXO().entrySet()){
-			TransactionOutput UTXO = item.getValue();
-			//Check for personal money
-			if(UTXO.isMine(publicKey)) { 
-				UTXOs.put(UTXO.id,UTXO); 
-				total += UTXO.value ; 
-			}
-		}  
-		return total;
-	}
+	
 
 	// Generate transaction
-	public Transaction generateSendTransaction(PublicKey receiver, float amount ) {
-		if(getBalance() < amount) { 
-			System.out.println("ERROR not enough money ");
-			return null;
-		}
-
-		// Generate Transaction Input list
-		ArrayList<TransactionInput> inputs = new ArrayList<TransactionInput>();
-
-		float total = 0;
-		for (Map.Entry<String, TransactionOutput> item: UTXOs.entrySet()){
-			TransactionOutput UTXO = item.getValue();
-			total += UTXO.value;
-			inputs.add(new TransactionInput(UTXO.id));
-			if(total > amount) break;
-		}
-
-		Transaction transaction = new Transaction(publicKey, receiver , amount, inputs);
+	public Transaction generateSendTransaction(PublicKey receiver, String data ) {
+		Transaction transaction = new Transaction(publicKey, receiver , data);
 		transaction.generateSignature(privateKey);
 
-		for(TransactionInput input: inputs){
-			UTXOs.remove(input.transactionOutputId);
-		}
 		return transaction;
 	}
 	

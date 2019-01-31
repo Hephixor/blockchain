@@ -55,7 +55,7 @@ class JsonTest {
 
 	@Test
 	void testJsonCreation() {
-		json = Utils.makeJson("pub_key", payload, "");
+		json = JsonUtils.makeJson("pub_key", payload, "");
 		String acutalJson = "" ;
 		try {acutalJson = json.toString(3);} catch (JSONException e) {e.printStackTrace();}
 
@@ -68,7 +68,7 @@ class JsonTest {
 
 	@Test
 	void testJsonRegister() {
-		json = Utils.makeJson("pub_key", null, "eventHashTest");
+		json = JsonUtils.makeJson("pub_key", null, "eventHashTest");
 		String acutalJson= "" ;
 		try {acutalJson = json.toString(3);} catch (JSONException e) {e.printStackTrace();}
 

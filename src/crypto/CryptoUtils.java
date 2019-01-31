@@ -12,7 +12,7 @@ public class CryptoUtils {
 		Signature signature;
 		byte[] outputBytes = new byte[0];
 		try {
-			signature = Signature.getInstance("ECDSA", "BC");
+			signature = Signature.getInstance("SHA256withECDSA", "BC");
 			signature.initSign(privateKey);
 			byte[] inputBytes = input.getBytes();
 			signature.update(inputBytes);
@@ -28,7 +28,7 @@ public class CryptoUtils {
 
 	public static boolean verifyECDSASignature(PublicKey publicKey, String data, byte[] signatureBytes) {
 		try {
-			Signature signature = Signature.getInstance("ECDSA", "BC");
+			Signature signature = Signature.getInstance("SHA256withECDSA", "BC");
 			signature.initVerify(publicKey);
 			signature.update(data.getBytes());
 			return signature.verify(signatureBytes);

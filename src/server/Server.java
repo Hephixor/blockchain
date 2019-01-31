@@ -1,7 +1,5 @@
 package server;
 
-import chain.BlockChain;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -70,5 +68,9 @@ public class Server {
 		if (executionThread != null) {
 			executionThread.interrupt();
 		}
+	}
+	
+	public int getDefaultPort() {
+		return DEFAULT_PORT;
 	}
 }

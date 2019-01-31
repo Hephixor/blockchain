@@ -3,7 +3,7 @@ package network;
 
 import org.json.JSONObject;
 
-public class Utils {
+public class JsonUtils {
 
 
 
