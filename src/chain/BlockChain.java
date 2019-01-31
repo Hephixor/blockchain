@@ -29,27 +29,42 @@ public class BlockChain {
 		Block currentBlock; 
 		Block previousBlock;
 		String hashTarget = new String(new char[difficulty]).replace('\0', '0');
-
+		int maxLevel = blocks.get(blocks.size()-1).getLevel();
+		
 		for(int i=1; i < blocks.size(); i++) {
-
+			
 			currentBlock = blocks.get(i);
 			previousBlock = blocks.get(i-1);
 
 			// Verify block
 			if(!currentBlock.getHash().equals(currentBlock.generateHash()) ){
-				System.out.println("ERROR current block hash is invalid");
+				System.err.println("ERROR current block hash is invalid");
+				System.err.println("\nCurrently : " + currentBlock.getHash());
+				System.err.println("\nShould be : " + currentBlock.generateHash());
+				
 				return false;
 			}
 
 			if(!previousBlock.getHash().equals(currentBlock.getPreviousHash())) {
-				System.out.println("ERROR previous block hash is invalid");
+				System.err.println("ERROR previous block hash is invalid");
+				return false;
+			}
+			
+			
+			if(!(previousBlock.getLevel()==currentBlock.getLevel()-1)) {
+				System.err.println("ERROR previous block level is invalid");
+				return false;
+			}
+			
+			if(currentBlock.getLevel()>maxLevel) {
+				System.err.println("ERROR misordered levels");
 				return false;
 			}
 
-			if(!currentBlock.getHash().substring( 0, difficulty).equals(hashTarget)) {
+			/* if(!currentBlock.getHash().substring( 0, difficulty).equals(hashTarget)) {
 				System.out.println("ERROR block is not correctly mined");
 				return false;
-			}
+			} */
 
 		}
 
@@ -64,7 +79,7 @@ public class BlockChain {
 	}
 
 	public void addBlock(Block blockToAdd) {
-		blockToAdd.mineBlock(difficulty);
+		//blockToAdd.mineBlock(difficulty);
 		blocks.add(blockToAdd);
 	}
 

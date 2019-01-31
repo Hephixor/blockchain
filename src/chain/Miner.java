@@ -8,12 +8,12 @@ import java.security.SecureRandom;
 import java.security.Security;
 import java.security.spec.ECGenParameterSpec;
 
-public class Wallet {
+public class Miner {
 	private PrivateKey privateKey;
 	private PublicKey publicKey;
 
 
-	public Wallet(){
+	public Miner(){
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 		generateKeyPair();	
 	}

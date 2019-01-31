@@ -13,7 +13,7 @@ public class PayloadCreation {
 	
 	public PayloadCreation() {}
 	
-	public PayloadCreation(String name, String description, String dateBegin, String dateEnd, String dateEndSubscription, String location, int limitMin, int limitMax) {
+	public PayloadCreation(String name, String description, String location, String dateBegin, String dateEnd, String dateEndSubscription,  int limitMin, int limitMax) {
 		this.name = name;
 		this.description = description;
 		this.dateBegin = dateBegin;

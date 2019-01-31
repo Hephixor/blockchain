@@ -13,16 +13,19 @@ public class Block {
 	private String data; 
 	private long timeStamp; //milliseconds POSIX time
 	private int level; //block level
+	private int time; // time step
 	private int nonce;
 	public String merkleRoot;
 	public ArrayList<Transaction> transactions = new ArrayList<Transaction>(); 
 
 
-	public Block(String previousHash) {
+	public Block(String previousHash, int level, int time) {
 		this.previousHash = previousHash;
 		this.timeStamp = new Date().getTime();
+		this.level = level;
+		this.time = time;
+		this.merkleRoot = "merkleRoot";
 		this.hash = generateHash();
-		this.level = 0;
 	}
 
 	public void mineBlock(int difficulty) {
@@ -85,6 +88,22 @@ public class Block {
 
 	public int getLevel() {
 		return level;
+	}
+	
+	public int getTime() {
+		return time;
+	}
+	
+	public String getMerkleRoot() {
+		return merkleRoot;
+	}
+	
+	public void setLevel(int level) {
+		this.level = level;
+	}
+	
+	public void setTimestamp(long timestampGenesis) {
+		this.timeStamp = timestampGenesis + (this.time * 15);
 	}
 
 

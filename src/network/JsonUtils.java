@@ -1,7 +1,11 @@
 package network;
 
 
+import java.security.PublicKey;
+
 import org.json.JSONObject;
+
+import crypto.CryptoUtils;
 
 public class JsonUtils {
 
@@ -37,8 +41,8 @@ public class JsonUtils {
 			jsonPayloadDate.put("end_subscription", payload.getDateEndSubscription());
 
 			//JSON limit
-			jsonPayloadLimit.put("min", payload.getLimitMin());
-			jsonPayloadLimit.put("max", payload.getLimitMax());
+			if(payload.getLimitMin() != -1) jsonPayloadLimit.put("min", payload.getLimitMin());
+			if(payload.getLimitMax() != -1) jsonPayloadLimit.put("max", payload.getLimitMax());
 
 			//JSON payload
 			jsonPayload.put("name", payload.getName());
@@ -55,15 +59,17 @@ public class JsonUtils {
 		return jsonPayload;
 	}
 
-	public static JSONObject makeJsonBloc(String pkey, String hashPrev, String rootHash) {
+	public static JSONObject makeJsonBloc(PublicKey pkey, String hashPrev, String rootHash, int level, int time) {
 		JSONObject jsonBloc = new JSONObject();
 
 		try {
-			jsonBloc.put("pub_key", pkey);
+			jsonBloc.put("pub_key", CryptoUtils.getStringFromKey(pkey));
 			jsonBloc.put("hash_prev_bloc", hashPrev);
 			jsonBloc.put("root_hash", rootHash);
+			jsonBloc.put("time", time);
+			jsonBloc.put("level", level);
 		} catch (Exception e) {
-			System.err.println("Error creatin JSON bloc");
+			System.err.println("Error creating JSON bloc");
 			e.printStackTrace();
 		}
 
@@ -74,7 +80,7 @@ public class JsonUtils {
 		JSONObject json = new JSONObject();
 
 		try {
-			if(pkey!=null && pkey != "") {
+			if(pkey!=null && pkey != "") {				
 				if(payload!=null) {
 					makeJsonHead(json, pkey, false);
 					json.put("payload", makeJsonPayload(payload));
