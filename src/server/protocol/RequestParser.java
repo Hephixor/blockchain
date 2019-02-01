@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 public class RequestParser {
     static final Pattern GET_BLOCK = Pattern.compile("GET_BLOCK/\\d+/");
+    static final Pattern ID = Pattern.compile("ID/\\d+/");
 
     /**
      * Parse a client request. Returns null if the request is invalid.
@@ -19,6 +20,8 @@ public class RequestParser {
 
         if (request.matches(GET_BLOCK.pattern())) {
             return parseGetBlock(request);
+        } else if (request.matches(ID.pattern())) {
+            return parseId(request);
         }
 
         return null;
@@ -26,13 +29,23 @@ public class RequestParser {
 
     /**
      * Parse a GET_BLOCK request. Returns null in case of  invalid request.
-     * @param request: a non-null & non-empty String representing the request to parse
-     * @return
+     * ex: GET_BLOCK/1/
      */
     private static GetBlock parseGetBlock(String request) {
         Matcher m = GET_BLOCK.matcher(request);
         m.find();
         Integer blockNumber = Integer.valueOf(m.group(1));
         return new GetBlock(blockNumber);
+    }
+
+    /**
+     * Parse an ID request. Returns null in case of invalid request.
+     * ex: ID/1/
+     */
+    private static Request parseId(String request) {
+        Matcher m = ID.matcher(request);
+        m.find();
+        Integer id = Integer.valueOf(m.group(1));
+        return new Id(id);
     }
 }

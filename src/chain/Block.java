@@ -32,8 +32,8 @@ public class Block {
 		// Check if transaction is valid / not genesis block
 		
 		if(transaction == null) return false;		
-		if((previousHash != "0")) {
-			if((transaction.processTransaction() != true)) {
+		if((!previousHash.equals("0"))) {
+			if((!transaction.processTransaction())) {
 				System.out.println("ERROR Can't add transaction");
 				return false;
 			}
@@ -89,6 +89,4 @@ public class Block {
 	public void setTimestamp(long timestampGenesis) {
 		this.timeStamp = timestampGenesis + (this.time * 15);
 	}
-
-
 }

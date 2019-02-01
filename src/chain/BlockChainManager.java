@@ -2,8 +2,7 @@ package chain;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,6 +17,7 @@ import merkle.Merkle;
 import chain.Node;
 import network.JsonUtils;
 import network.PayloadCreation;
+import server.IpAddress;
 import server.Server;
 import server.ServerBlockChain;
 
@@ -34,7 +34,7 @@ public class BlockChainManager {
 					// Create BlockChain
 					blockChain = new BlockChain();		
 					serverBlockChain = new ServerBlockChain(blockChain);
-					server = new Server(serverBlockChain);
+					server = new Server(serverBlockChain, new ArrayList<>());
 					me = new Node();
 					System.out.println("Server started listening on port "+server.getDefaultPort());
 	}

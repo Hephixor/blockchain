@@ -10,22 +10,22 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class ClientHandler extends Thread {
-    private Socket clientConnection;
+public class PeerConnection extends Thread {
+    private Socket socket;
     private PrintWriter clientWritter;
     private RequestHandler chain;
 
-    public ClientHandler(RequestHandler chain, Socket clientConnection) {
+    public PeerConnection(RequestHandler chain, Socket clientConnection) {
         this.chain = chain;
-        this.clientConnection = clientConnection;
+        this.socket = clientConnection;
     }
 
     @Override
     public void run() {
         try {
-            clientWritter = new PrintWriter(clientConnection.getOutputStream(), true);
-            BufferedReader in = new BufferedReader(new InputStreamReader(clientConnection.getInputStream()));
-            while (clientConnection.isConnected()) {
+            clientWritter = new PrintWriter(socket.getOutputStream(), true);
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            while (socket.isConnected()) {
                 Request request = RequestParser.parserRequest(in.readLine());
                 Object response = null;
 
@@ -51,5 +51,9 @@ public class ClientHandler extends Thread {
             clientWritter.println("DISCONNECTED/");
         }
         interrupt();
+    }
+
+    public Socket getSocket() {
+        return socket;
     }
 }
