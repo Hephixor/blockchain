@@ -9,13 +9,13 @@ import java.security.Security;
 import java.security.spec.ECGenParameterSpec;
 import java.util.ArrayList;
 
-public class Miner {
+public class Node {
 	private PrivateKey privateKey;
 	private PublicKey publicKey;
 	private ArrayList<Transaction> transactions;
 
 
-	public Miner(){
+	public Node(){
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 		generateKeyPair();	
 	}
