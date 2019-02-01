@@ -12,14 +12,10 @@ public class BlockChain {
 		difficulty = 5;
 	}
 
-	public BlockChain(int miningDifficulty) {
-		blocks = new ArrayList<Block>();
-		difficulty = miningDifficulty;
-	}
 
-	public BlockChain(Block genesis, int miningDifficulty) {
+
+	public BlockChain(Block genesis) {
 		blocks = new ArrayList<Block>();
-		difficulty = miningDifficulty;
 		addBlock(genesis);
 
 	}

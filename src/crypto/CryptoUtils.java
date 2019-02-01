@@ -1,9 +1,13 @@
 package crypto;
 
+import java.security.InvalidKeyException;
 import java.security.Key;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
+import java.security.SignatureException;
 import java.util.Base64;
 
 public class CryptoUtils {
@@ -26,17 +30,28 @@ public class CryptoUtils {
 	}
 
 
-	public static boolean verifyECDSASignature(PublicKey publicKey, String data, byte[] signatureBytes) {
+	public static boolean verifyECDSASignature(PublicKey publicKey, byte[] data, byte[] signatureBytes) {
+		Signature sig;
 		try {
-			Signature signature = Signature.getInstance("SHA256withECDSA", "BC");
-			signature.initVerify(publicKey);
-			signature.update(data.getBytes());
-			return signature.verify(signatureBytes);
-		}catch(Exception e) {
-			throw new RuntimeException(e);
+			sig = Signature.getInstance("SHA256withECDSA", "BC");
+			sig.initVerify(publicKey);
+			sig.update(data);
+			if (!sig.verify(signatureBytes))
+			{
+				System.out.println("Fail");
+				return false;
+			} else {
+				System.out.println("Good");
+				return true;
+			}
+		} catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidKeyException | SignatureException e) {
+			e.printStackTrace();
 		}
+		return false;
+
+
 	}
-	
+
 	public static String getStringFromKey(Key key) {
 		return Base64.getEncoder().encodeToString(key.getEncoded());
 	}

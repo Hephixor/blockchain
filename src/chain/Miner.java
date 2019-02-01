@@ -7,10 +7,12 @@ import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.Security;
 import java.security.spec.ECGenParameterSpec;
+import java.util.ArrayList;
 
 public class Miner {
 	private PrivateKey privateKey;
 	private PublicKey publicKey;
+	private ArrayList<Transaction> transactions;
 
 
 	public Miner(){
@@ -40,7 +42,8 @@ public class Miner {
 	public Transaction generateSendTransaction(PublicKey receiver, String data ) {
 		Transaction transaction = new Transaction(publicKey, receiver , data);
 		transaction.generateSignature(privateKey);
-
+		
+		transactions.add(transaction);
 		return transaction;
 	}
 	

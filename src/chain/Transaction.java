@@ -43,7 +43,7 @@ public class Transaction {
 	// Verify the Signature given the same protocols
 	public boolean verifiySignature() {
 		String data = CryptoUtils.getStringFromKey(senderPUK) + CryptoUtils.getStringFromKey(receiverPRK) + this.data;
-		return CryptoUtils.verifyECDSASignature(senderPUK, data, signature);
+		return CryptoUtils.verifyECDSASignature(senderPUK, data.getBytes(), signature);
 	}
 	
 	
