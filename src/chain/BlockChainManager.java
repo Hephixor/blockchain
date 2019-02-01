@@ -13,6 +13,7 @@ import chain.BlockChain;
 import chain.Transaction;
 import crypto.CryptoUtils;
 import merkle.Bytes;
+import merkle.Convert;
 import merkle.Merkle;
 import chain.Node;
 import network.JsonUtils;
@@ -70,7 +71,7 @@ public class BlockChainManager {
 	
 	
 	public static Block makeBlockOutOfTransaction(String transaction[]) {
-		String roothash = Bytes.toHex(Merkle.merkleTree(transaction).getHash());
+		String roothash = Convert.bytesToHex(Merkle.merkleTree(transaction).getHash());
 		Block block = createNewBlock(roothash);
 		return block;
 	}

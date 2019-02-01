@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 
 import crypto.CryptoUtils;
-import merkle.Bytes;
+import merkle.Convert;
 import merkle.Hash;
 
 public class Transaction {
@@ -31,7 +31,7 @@ public class Transaction {
 		// change the counter to avoid 2 identical transactions having the same hash
 		nbGeneratedTransaction++; 
 		
-		return Bytes.toHex(Hash.digestString(CryptoUtils.getStringFromKey(senderPUK) + CryptoUtils.getStringFromKey(receiverPRK) + data + nbGeneratedTransaction)).toLowerCase();
+		return Convert.bytesToHex(Hash.digestSHA256String(CryptoUtils.getStringFromKey(senderPUK) + CryptoUtils.getStringFromKey(receiverPRK) + data + nbGeneratedTransaction)).toLowerCase();
 
 	}
 	

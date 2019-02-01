@@ -1,7 +1,8 @@
 package tests;
 
-import merkle.Bytes;
 import org.junit.jupiter.api.Test;
+
+import merkle.Convert;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -28,10 +29,10 @@ public class HMACTest {
         sha256HMAC.init(secret);
         sha256HMAC.update(Files.readAllBytes(HMAC_DIR_VALID.resolve("data")));
 
-        String mac = Bytes.toHex(sha256HMAC.doFinal());
+        String mac = Convert.bytesToHex(sha256HMAC.doFinal());
         System.out.println("actual:   " + mac);
 
-        String expected = Bytes.toHex(Files.readAllBytes(HMAC_DIR_VALID.resolve("hmac")));
+        String expected = Convert.bytesToHex(Files.readAllBytes(HMAC_DIR_VALID.resolve("hmac")));
         System.out.println("expected: " + expected);
 
         assertEquals(expected, mac);

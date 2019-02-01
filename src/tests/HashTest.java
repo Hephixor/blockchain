@@ -15,7 +15,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import merkle.Bytes;
+import merkle.Convert;
 import merkle.Hash;
 
 class HashTest {
@@ -46,14 +46,14 @@ class HashTest {
 	
 	@Test
 	void testDigestByteArray() {
-		byte[] h1 = Hash.digest(b1);
-		byte[] h1bis = Hash.digest(b1bis);
-		byte[] h2 = Hash.digest(b2);
+		byte[] h1 = Hash.digestSHA256(b1);
+		byte[] h1bis = Hash.digestSHA256(b1bis);
+		byte[] h2 = Hash.digestSHA256(b2);
 		
 		System.out.println("\n/*---------- digest(byte[] data) ----------*/");
-		System.out.println("h1: "+ Bytes.toHex(h1));
-		System.out.println("h1b:"+ Bytes.toHex(h1bis));
-		System.out.println("h2: "+ Bytes.toHex(h2));
+		System.out.println("h1: "+ Convert.bytesToHex(h1));
+		System.out.println("h1b:"+ Convert.bytesToHex(h1bis));
+		System.out.println("h2: "+ Convert.bytesToHex(h2));
 		
 		assertTrue(Arrays.equals(h1, h1bis));
 		assertTrue(!Arrays.equals(h1, h2));
@@ -64,8 +64,8 @@ class HashTest {
     void testSHA256File() throws IOException, NoSuchAlgorithmException {
         System.out.println("\n/*---------- hashString(String \"data\") ----------*/");
 
-        byte[] data = Hash.digestString("data");
-        String result = Bytes.toHex(data).toLowerCase();
+        byte[] data = Hash.digestSHA256String("data");
+        String result = Convert.bytesToHex(data).toLowerCase();
         String expected = new String(Files.readAllBytes(Paths.get(SHA256_DIR, "sha256_hex")), StandardCharsets.UTF_8);
 
         System.out.println("expected:\t" + expected);

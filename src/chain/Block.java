@@ -3,7 +3,7 @@ package chain;
 import java.util.ArrayList;
 import java.util.Date;
 
-import merkle.Bytes;
+import merkle.Convert;
 import merkle.Hash;
 import merkle.Merkle;
 
@@ -44,7 +44,7 @@ public class Block {
 }
 
 	public String generateHash() {
-		return Bytes.toHex(Hash.digestString(previousHash + Long.toString(timeStamp) + merkleRoot)).toLowerCase();
+		return Convert.bytesToHex(Hash.digestSHA256String(previousHash + Long.toString(timeStamp) + merkleRoot)).toLowerCase();
 	}
 
 	//Getters ....
