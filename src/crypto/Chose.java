@@ -113,7 +113,7 @@ public class Chose {
         // Revérifier une signature
         sig.initVerify(vKey);
         sig.update(msg);
-        if (!sig.verify(signed))
+        if (!sig.verify(asn1_encode(raw_signed)))
         {
             System.out.println("Fail 2");
         } else {
