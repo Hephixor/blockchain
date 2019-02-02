@@ -27,6 +27,14 @@ public class Block {
 		this.hash = generateHash();
 	}
 
+	public Block(int level, String hash, String previousHash, long timeStamp, String merkleRoot) {
+	    this.level = level;
+	    this.hash = hash;
+	    this.previousHash = previousHash;
+	    this.timeStamp = timeStamp;
+	    this.merkleRoot = merkleRoot;
+    }
+
 	
 	public boolean addTransaction(Transaction transaction) {
 		// Check if transaction is valid / not genesis block

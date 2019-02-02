@@ -1,9 +1,13 @@
 package server.protocol;
 
 public class GetBlock extends Request {
-    public int blockNumber;
+    private int blockNumber;
 
     public GetBlock(int blockNumber) {
         this.blockNumber = blockNumber;
+    }
+
+    public int getBlockNumber() {
+        return blockNumber;
     }
 }

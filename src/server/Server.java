@@ -38,6 +38,7 @@ public class Server implements IServer {
 	public Server(int port, int id, List<IpAddress> allowedAdresses, ConcurrentBlockChain chain) throws IOException {
 		this.serverSocket = new ServerSocket(port);
 		this.blockchain = chain;
+		this.blockchain.setServer(this);
 		this.allowedAdresses = allowedAdresses;
 		this.id = id;
 		consensusManager = new ConsensusManager(this);
@@ -126,9 +127,9 @@ public class Server implements IServer {
         if (peerConnections.get(id) != null || id == this.id) {
             System.err.println("Peer with id " + id + " is already connected");
         } else {
-            PeerConnection handler = new PeerConnection(this, s, reader);
+            PeerConnection handler = new PeerConnection(this, id, s, reader);
             handler.start();
-            peerConnections.put(id, new PeerConnection(this, s, reader));
+            peerConnections.put(id, handler);
             System.out.println("Connected to peer " + id);
         }
     }
@@ -165,6 +166,11 @@ public class Server implements IServer {
     @Override
     public ConcurrentBlockChain getChain() {
         return blockchain;
+    }
+
+    @Override
+    public ConsensusManager getConsensusManager() {
+        return consensusManager;
     }
 
     @Override

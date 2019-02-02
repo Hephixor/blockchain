@@ -4,6 +4,7 @@ import merkle.Hash;
 
 import java.nio.ByteBuffer;
 import java.time.Instant;
+import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -32,7 +33,6 @@ public class ConsensusManager implements Runnable {
      * Returns the id of the current leader.
      */
     private int computeCurrentLeader() {
-        System.out.println(currentIntervalNumber());
         return leaderAtNthInterval(currentIntervalNumber());
     }
 
@@ -46,8 +46,8 @@ public class ConsensusManager implements Runnable {
     /**
      * Returns the index of the leader at instant t.
      */
-    private int leaderAtTime(long t) {
-        return leaderAtNthInterval((int) t / INTERVAL_IN_MILLIS);
+    public int leaderAtTime(long time) {
+        return leaderAtNthInterval((int) time / INTERVAL_IN_MILLIS);
     }
 
     /**
