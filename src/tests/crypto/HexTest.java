@@ -19,7 +19,7 @@ public class HexTest {
 		String hex = Convert.fileToString(dir + "test_0/hex");
 		
 		String my_data = Convert.hexToString(hex);
-		String my_hex = Convert.bytesToHex(data.getBytes());
+		String my_hex = Convert.stringToHex(data);
 		
 		assert my_data.equals(data);
 		assert my_hex.equals(hex);

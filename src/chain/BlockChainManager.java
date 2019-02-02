@@ -71,7 +71,7 @@ public class BlockChainManager {
 	
 	
 	public static Block makeBlockOutOfTransaction(String transaction[]) {
-		String roothash = Convert.bytesToHex(Merkle.merkleTree(transaction).getHash());
+		String roothash = Convert.bytesToHex(Merkle.getRootHash(transaction));
 		Block block = createNewBlock(roothash);
 		return block;
 	}

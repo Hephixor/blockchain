@@ -11,7 +11,26 @@ public class Merkle {
 	 * @param datas Tableau de données non hashées
 	 * @return Racine de l'arbre de Merkle représentant le tableau de données passé en paramètres.
 	 */
-	public static Node merkleTree(byte[][] datas){
+	public static byte[] getRootHash(byte[][] datas) {
+		Node root = merkleTree(datas);
+		return root.getHash();
+	}
+	
+	/**
+	 * Construit un arbre de Merkle à partir d'un tableau de Strings non hashées.
+	 * @param datas Tableau de Strings non hashées
+	 * @return Racine de l'arbre de Merkle représentant le tableau de Strings passé en paramètres.
+	 */
+	public static byte[] getRootHash(String[] datas) {
+		Node root = merkleTree(datas);
+		return root.getHash();
+	}
+	
+	
+	
+	
+	
+	private static Node merkleTree(byte[][] datas){
 		Node[] leaves = new Node[datas.length];
 		
 		for(int i=0; i<datas.length; i++) {
@@ -21,12 +40,7 @@ public class Merkle {
 		return merkleTreeRec(leaves);
 	}
 	
-	/**
-	 * Construit un arbre de Merkle à partir d'un tableau de Strings non hashées.
-	 * @param datas Tableau de Strings non hashées
-	 * @return Racine de l'arbre de Merkle représentant le tableau de Strings passé en paramètres.
-	 */
-	public static Node merkleTree(String[] datas){
+	private static Node merkleTree(String[] datas){
 		byte[][] datasBytesArrays = new byte[datas.length][];
 		
 		for(int i=0; i<datas.length; i++) {

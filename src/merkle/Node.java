@@ -15,8 +15,9 @@ public class Node {
 	public Node(byte[] data) {
 		leftChild = null;
 		rightChild = null;
+		byte[] zero = {0};
 		this.hash = Hash.digestSHA256(Bytes.concat(
-				Convert.stringToBytes("0"),
+				zero,
 				data 
 		));
 	}
@@ -29,8 +30,9 @@ public class Node {
 	public Node(Node leftChild, Node rightChild) {
 		this.leftChild = leftChild;
 		this.rightChild = rightChild;
+		byte[] one = {1};
 		this.hash = Hash.digestSHA256(Bytes.concat(
-				Convert.stringToBytes("1"),
+				one,
 				leftChild.getHash(), 
 				rightChild.getHash()
 		));
