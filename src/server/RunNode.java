@@ -7,7 +7,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class RunNode {
@@ -28,7 +27,7 @@ public class RunNode {
         }
 
         List<IpAddress> allowedPeers = readAllowedPeers(peersFileName);
-        ServerBlockChain blockchain = new ServerBlockChain(new BlockChain());
+        ConcurrentBlockChain blockchain = new ConcurrentBlockChain(new BlockChain());
         Server server = null;
 
         try {
@@ -41,6 +40,7 @@ public class RunNode {
         try {
             server.start().join();
         } catch (InterruptedException e) {
+            server.stop();
             e.printStackTrace();
             System.exit(1);
         }

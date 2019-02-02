@@ -12,17 +12,17 @@ import java.net.Socket;
 
 public class PeerConnection extends Thread {
     private Socket socket;
+    private IServer server;
     private PrintWriter clientWritter;
-    private RequestHandler chain;
     private BufferedReader socketReader;
 
-    public PeerConnection(RequestHandler chain, Socket clientConnection) {
-        this.chain = chain;
-        this.socket = clientConnection;
+    public PeerConnection(IServer server, Socket clientSocket) {
+        this(server, clientSocket, null);
     }
 
-    public PeerConnection(RequestHandler chain, Socket clientSocket, BufferedReader socketReader) {
-        this(chain, clientSocket);
+    public PeerConnection(IServer server, Socket clientSocket, BufferedReader socketReader) {
+        this.server = server;
+        this.socket = clientSocket;
         this.socketReader = socketReader;
     }
 
@@ -38,7 +38,7 @@ public class PeerConnection extends Thread {
                 Object response = null;
 
                 if (request instanceof GetBlock) {
-                    response = chain.onGetBlock((GetBlock) request);
+                    response = server.getChain().getBlock((GetBlock) request);
                 }
 
                 if (response != null) {

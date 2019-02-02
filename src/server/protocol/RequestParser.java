@@ -4,7 +4,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RequestParser {
+    // Get block number n for the network.
     static final Pattern GET_BLOCK = Pattern.compile("GET_BLOCK/(\\d+)/");
+
+    // Broadcast this node's id to the network.
     static final Pattern ID = Pattern.compile("ID/(\\d+)/");
 
     /**

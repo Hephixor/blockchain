@@ -4,7 +4,6 @@ import server.protocol.Id;
 import server.protocol.Request;
 import server.protocol.RequestParser;
 
-import java.awt.desktop.SystemSleepEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -21,32 +20,35 @@ public class Server implements IServer {
 	private ServerSocket serverSocket;
 	private Thread executionThread;
 	private Map<Integer, PeerConnection> peerConnections = Collections.synchronizedMap(new HashMap<>());
-	private ServerBlockChain blockchain;
+	private ConcurrentBlockChain blockchain;
 	private List<IpAddress> allowedAdresses;
+	private ConsensusManager consensusManager;
 	private int id;
 
 	/**
 	 * Create and initialize a concurrent node server that will listen on the
 	 */
-	public Server(List<IpAddress> allowedAdresses, ServerBlockChain chain) throws IOException {
+	public Server(List<IpAddress> allowedAdresses, ConcurrentBlockChain chain) throws IOException {
 		this(DEFAULT_PORT, DEFAULT_ID, allowedAdresses, chain);
 	}
 
 	/**
 	 * Create and initialize a concurrent node server.
 	 */
-	public Server(int port, int id, List<IpAddress> allowedAdresses, ServerBlockChain chain) throws IOException {
+	public Server(int port, int id, List<IpAddress> allowedAdresses, ConcurrentBlockChain chain) throws IOException {
 		this.serverSocket = new ServerSocket(port);
 		this.blockchain = chain;
 		this.allowedAdresses = allowedAdresses;
 		this.id = id;
+		consensusManager = new ConsensusManager(this);
 	}
 
 	/**
 	 * Start the server's thread.
 	 */
 	public Thread start() {
-	    System.out.println("Serving on port: " + serverSocket.getLocalPort());
+	    new Thread(consensusManager).start();
+	    System.out.println("Serving on port: " + serverSocket.getLocalPort() + " with id " + id);
         connectToPeers();
 		Runnable task = () -> {
 			try {
@@ -124,9 +126,9 @@ public class Server implements IServer {
         if (peerConnections.get(id) != null || id == this.id) {
             System.err.println("Peer with id " + id + " is already connected");
         } else {
-            PeerConnection handler = new PeerConnection(blockchain, s, reader);
+            PeerConnection handler = new PeerConnection(this, s, reader);
             handler.start();
-            peerConnections.put(id, new PeerConnection(blockchain, s, reader));
+            peerConnections.put(id, new PeerConnection(this, s, reader));
             System.out.println("Connected to peer " + id);
         }
     }
@@ -158,5 +160,15 @@ public class Server implements IServer {
     @Override
     public int getMaxPeersCount() {
         return allowedAdresses.size();
+    }
+
+    @Override
+    public ConcurrentBlockChain getChain() {
+        return blockchain;
+    }
+
+    @Override
+    public void setLeader(int id) {
+        System.out.println("The leader is now " + id);
     }
 }

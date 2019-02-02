@@ -1,40 +1,31 @@
 package chain;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import chain.Block;
-import chain.BlockChain;
-import chain.Transaction;
 import crypto.CryptoUtils;
-import merkle.Bytes;
 import merkle.Convert;
 import merkle.Merkle;
-import chain.Node;
 import network.JsonUtils;
 import network.PayloadCreation;
-import server.IpAddress;
 import server.Server;
-import server.ServerBlockChain;
+import server.ConcurrentBlockChain;
 
 public class BlockChainManager {
 	// First transaction to inject money into blockChain
 	public static Transaction genesisTransaction;
 
 	public static BlockChain blockChain;
-	public static ServerBlockChain serverBlockChain;
+	public static ConcurrentBlockChain concurrentBlockChain;
 	public static Server server;
 	public static Node me;
 	
 	public BlockChainManager() throws IOException {
 					// Create BlockChain
 					blockChain = new BlockChain();		
-					serverBlockChain = new ServerBlockChain(blockChain);
-					server = new Server(new ArrayList<>(), serverBlockChain);
+					concurrentBlockChain = new ConcurrentBlockChain(blockChain);
+					server = new Server(new ArrayList<>(), concurrentBlockChain);
 					me = new Node();
 					System.out.println("Server started listening on port "+server.getDefaultPort());
 	}
@@ -105,8 +96,8 @@ public class BlockChainManager {
 		return blockChain;
 	}
 
-	public static ServerBlockChain getServerBlockChain() {
-		return serverBlockChain;
+	public static ConcurrentBlockChain getConcurrentBlockChain() {
+		return concurrentBlockChain;
 	}
 
 	public static Server getServer() {
