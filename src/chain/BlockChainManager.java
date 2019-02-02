@@ -34,7 +34,7 @@ public class BlockChainManager {
 					// Create BlockChain
 					blockChain = new BlockChain();		
 					serverBlockChain = new ServerBlockChain(blockChain);
-					server = new Server(serverBlockChain, new ArrayList<>());
+					server = new Server(new ArrayList<>(), serverBlockChain);
 					me = new Node();
 					System.out.println("Server started listening on port "+server.getDefaultPort());
 	}

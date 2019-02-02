@@ -14,17 +14,17 @@ public class RunNode {
     public static final String DEFAULT_PEERS_FILE = "peers";
 
     public static void main(String[] args) {
-        String peersFileName = DEFAULT_PEERS_FILE;
-        int port = Server.DEFAULT_PORT;
-
-        if (args.length == 1 && args[0].matches("\\d+")) {
-            port = Integer.valueOf(args[0]);
-        } else if (args.length == 1 && !args[0].matches("\\d+")) {
-            peersFileName = args[0];
+        if (args.length < 2) {
+            System.err.println("missing arguments");
+            System.exit(1);
         }
 
-        if (args.length >= 2) {
-            peersFileName = args[1];
+        String peersFileName = DEFAULT_PEERS_FILE;
+        int port = Integer.valueOf(args[0]);
+        int id = Integer.valueOf(args[1]);
+
+        if (args.length == 3) {
+            peersFileName = args[2];
         }
 
         List<IpAddress> allowedPeers = readAllowedPeers(peersFileName);
@@ -32,7 +32,7 @@ public class RunNode {
         Server server = null;
 
         try {
-            server = new Server(blockchain, port, allowedPeers);
+            server = new Server(port, id, allowedPeers, blockchain);
         } catch (IOException e) {
             System.err.println("Error while initializing the server: " + e.getMessage());
             System.exit(1);

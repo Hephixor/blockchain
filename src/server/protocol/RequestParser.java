@@ -4,8 +4,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RequestParser {
-    static final Pattern GET_BLOCK = Pattern.compile("GET_BLOCK/\\d+/");
-    static final Pattern ID = Pattern.compile("ID/\\d+/");
+    static final Pattern GET_BLOCK = Pattern.compile("GET_BLOCK/(\\d+)/");
+    static final Pattern ID = Pattern.compile("ID/(\\d+)/");
 
     /**
      * Parse a client request. Returns null if the request is invalid.

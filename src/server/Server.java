@@ -1,38 +1,45 @@
 package server;
 
+import server.protocol.Id;
+import server.protocol.Request;
+import server.protocol.RequestParser;
+
+import java.awt.desktop.SystemSleepEvent;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.Executors;
 
 public class Server implements IServer {
 	static final int DEFAULT_PORT = 7777;
+	static final int DEFAULT_ID = 0;
 
 	private ServerSocket serverSocket;
 	private Thread executionThread;
-	private List<PeerConnection> peerConnections = Collections.synchronizedList(new ArrayList<>());
+	private Map<Integer, PeerConnection> peerConnections = Collections.synchronizedMap(new HashMap<>());
 	private ServerBlockChain blockchain;
 	private List<IpAddress> allowedAdresses;
+	private int id;
 
 	/**
 	 * Create and initialize a concurrent node server that will listen on the
-	 * DEFAULT_PORT port.
 	 */
-	public Server(ServerBlockChain chain, List<IpAddress> allowedAdresses) throws IOException {
-		this(chain, DEFAULT_PORT, allowedAdresses);
+	public Server(List<IpAddress> allowedAdresses, ServerBlockChain chain) throws IOException {
+		this(DEFAULT_PORT, DEFAULT_ID, allowedAdresses, chain);
 	}
 
 	/**
 	 * Create and initialize a concurrent node server.
-	 * @param port: the port to listen to
 	 */
-	public Server(ServerBlockChain chain, int port, List<IpAddress> allowedAdresses) throws IOException {
+	public Server(int port, int id, List<IpAddress> allowedAdresses, ServerBlockChain chain) throws IOException {
 		this.serverSocket = new ServerSocket(port);
 		this.blockchain = chain;
 		this.allowedAdresses = allowedAdresses;
+		this.id = id;
 	}
 
 	/**
@@ -59,23 +66,14 @@ public class Server implements IServer {
      */
     private void connectToPeers() {
         allowedAdresses.forEach(address -> {
-            if (isSelf(address)) {
-                return;
-            }
             Socket s;
             try {
                 s = new Socket(address.getAddress(), address.getPort());
-                peerConnections.add(new PeerConnection(blockchain, s));
-                System.out.println("Connected to peer: " + address);
+                connect(s);
             } catch (IOException e) {
-                System.err.println("Cannot connect to peer: " + address);
+                System.err.println("Cannot join peer: " + address);
             }
         });
-    }
-
-    private boolean isSelf(IpAddress otherAddress) {
-        return otherAddress.getAddress().equals("127.0.0.1")
-                && otherAddress.getPort() == serverSocket.getLocalPort();
     }
 
 	/**
@@ -87,15 +85,51 @@ public class Server implements IServer {
             Socket s = serverSocket.accept();
             if (isAllowed(s.getLocalSocketAddress())) {
                 System.out.println("Incoming connection from " + s.getRemoteSocketAddress());
-                PeerConnection newHandler = new PeerConnection(blockchain, s);
-                peerConnections.add(newHandler);
-                newHandler.start();
+                connect(s);
             } else {
                 System.out.println("Connection attempt from invalid address: " + s.getRemoteSocketAddress().toString());
                 s.close();
             }
         }
 	}
+
+    /**
+     * Try to establish a connection over the given socket.
+     */
+	private void connect(Socket s) {
+	    BufferedReader reader;
+        try {
+            reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
+        } catch (IOException e) {
+            System.out.println("Unable to read from peer: " + s.getRemoteSocketAddress() + "\n" + e.getMessage());
+            return;
+        }
+
+        Executors.newSingleThreadExecutor().submit(() -> {
+            Request request;
+            try {
+                s.getOutputStream().write(((new Id(id).toString()) + "\n").getBytes());
+                request = RequestParser.parserRequest(reader.readLine());
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            if (request instanceof Id) {
+                registerPeerConnection(s, reader, ((Id) request).id);
+            }
+        });
+    }
+
+    private void registerPeerConnection(Socket s, BufferedReader reader, Integer id) {
+        if (peerConnections.get(id) != null || id == this.id) {
+            System.err.println("Peer with id " + id + " is already connected");
+        } else {
+            PeerConnection handler = new PeerConnection(blockchain, s, reader);
+            handler.start();
+            peerConnections.put(id, new PeerConnection(blockchain, s, reader));
+            System.out.println("Connected to peer " + id);
+        }
+    }
 
 	private boolean isAllowed(SocketAddress address) {
         String[] components = stringOfSockAddress(address).split(":");
@@ -111,7 +145,7 @@ public class Server implements IServer {
 	 * Disconnect all the clients and kill the server's thread.
 	 */
 	public void stop() {
-		peerConnections.forEach(PeerConnection::disconnect);
+		peerConnections.values().forEach(PeerConnection::disconnect);
 		if (executionThread != null) {
 			executionThread.interrupt();
 		}

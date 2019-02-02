@@ -44,6 +44,10 @@ public class Hash {
 		return hash;
 	}
 
+	public static byte[] digest(byte[] data) {
+	    return data;
+    }
+
 
     /**
      * Hash une chaîne de charactères en utilisant l'algorithme SHA-256.
