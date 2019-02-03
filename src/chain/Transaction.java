@@ -1,49 +1,41 @@
 package chain;
 
 import java.security.*;
-import java.util.ArrayList;
-import java.util.Base64;
-
 import crypto.CryptoUtils;
-import merkle.Convert;
-import merkle.Hash;
+import network.Payload;
 
 public class Transaction {
 	
-	public String transactionId; 
+	public int transactionId; 
 	public PublicKey senderPUK; 
-	public PublicKey receiverPRK; 
-	public String data; 
+	public TransactionTypeEnum type;
+	public Payload payload; 
 	public byte[] signature; 
 	
-	
-	private static int nbGeneratedTransaction = 0;  
-	
-
-	public Transaction(PublicKey sender, PublicKey receiver, String data) {
-		this.senderPUK = sender;
-		this.receiverPRK = receiver;
-		this.data = data;
+	// Constructor
+	public Transaction(PublicKey senderPUK, PrivateKey senderPRI, Payload payload, int id, TransactionTypeEnum type) {
+		this.type = type;
+		this.transactionId = id;
+		this.senderPUK = senderPUK;
+		this.payload = payload;
+		this.signature = generateSignature(senderPRI);
 	}
 	
-	// Generated Transaction Hash
-	private String generateHash() {
-		// change the counter to avoid 2 identical transactions having the same hash
-		nbGeneratedTransaction++; 
-		
-		return Convert.bytesToHex(Hash.digestSHA256String(CryptoUtils.getStringFromKey(senderPUK) + CryptoUtils.getStringFromKey(receiverPRK) + data + nbGeneratedTransaction)).toLowerCase();
 
-	}
-	
 	// Generate Signature with all wanted protocols
-	public void generateSignature(PrivateKey privateKey) {
-		String data = CryptoUtils.getStringFromKey(senderPUK) + CryptoUtils.getStringFromKey(receiverPRK) + this.data;
-		signature = CryptoUtils.makeECDSASignature(privateKey,data);		
+	public byte[] generateSignature(PrivateKey privateKey) {
+		String data = CryptoUtils.getStringFromKey(senderPUK) + this.payload.toString();
+		return CryptoUtils.makeECDSASignature(privateKey,data);		
 	}
 	// Verify the Signature given the same protocols
 	public boolean verifiySignature() {
-		String data = CryptoUtils.getStringFromKey(senderPUK) + CryptoUtils.getStringFromKey(receiverPRK) + this.data;
+		String data = CryptoUtils.getStringFromKey(senderPUK) + this.payload.toString();
 		return CryptoUtils.verifyECDSASignature(senderPUK, data.getBytes(), signature);
+	}
+	
+	
+	public Payload getPayload() {
+		return payload;
 	}
 	
 	
@@ -55,8 +47,6 @@ public class Transaction {
 				System.out.println("ERROR Transaction Signature could not be verified");
 				return false;
 			}
-					
-			
 			return true;
 		}
 		

@@ -5,14 +5,10 @@ import com.google.gson.GsonBuilder;
 
 public class BlockChain {
 	private static ArrayList<Block> blocks;
-	private static int difficulty ;
 
 	public BlockChain() {
 		blocks = new ArrayList<Block>();
-		difficulty = 5;
 	}
-
-
 
 	public BlockChain(Block genesis) {
 		blocks = new ArrayList<Block>();
@@ -24,7 +20,6 @@ public class BlockChain {
 	public Boolean isChainValid() {
 		Block currentBlock; 
 		Block previousBlock;
-		String hashTarget = new String(new char[difficulty]).replace('\0', '0');
 		int maxLevel = blocks.get(blocks.size()-1).getLevel();
 		
 		for(int i=1; i < blocks.size(); i++) {

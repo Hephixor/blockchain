@@ -13,6 +13,7 @@ public class Node {
 	private PrivateKey privateKey;
 	private PublicKey publicKey;
 	private ArrayList<Transaction> transactions;
+ 
 
 
 	public Node(){
@@ -20,6 +21,7 @@ public class Node {
 		generateKeyPair();	
 	}
 
+	// Generate the keypair for current Node
 	public void generateKeyPair() {
 		try {
 			KeyPairGenerator keyGen = KeyPairGenerator.getInstance("ECDSA","BC");
@@ -38,13 +40,15 @@ public class Node {
 
 	
 
-	// Generate transaction
-	public Transaction generateSendTransaction(PublicKey receiver, String data ) {
-		Transaction transaction = new Transaction(publicKey, receiver , data);
+	// Sign transaction
+	public Transaction signTransaction(Transaction transaction) {
 		transaction.generateSignature(privateKey);
-		
-		transactions.add(transaction);
 		return transaction;
+	}
+	
+	// Add to transactions list
+	public void addTransaction(Transaction transaction) {
+		transactions.add(transaction);
 	}
 	
 	public PrivateKey getPrivateKey() {

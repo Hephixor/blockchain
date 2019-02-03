@@ -9,7 +9,10 @@ import java.util.Scanner;
 
 import chain.Block;
 import chain.BlockChainManager;
+import chain.Transaction;
+import chain.TransactionTypeEnum;
 import network.PayloadCreation;
+import network.PayloadRegister;
 
 public class InterfaceCommand {
 	public static BlockChainManager blockChainManager;
@@ -53,17 +56,32 @@ public class InterfaceCommand {
 					System.out.println("\nMax participant : ");
 					int max = sc.nextInt();
 					
-					PayloadCreation payload = new PayloadCreation(nom,description,lieu, dateBegin, dateEndSub, dateEnd, min , max );
+					// Make payload from data
+					PayloadCreation payloadC = new PayloadCreation(nom,description,lieu, dateBegin, dateEndSub, dateEnd, min , max);
 					
-					Block creationB = BlockChainManager.makeBlockOutOfTransaction(blockChainManager.makeCreateTransaction(payload));
+					// Make transaction from payload
+					Transaction transactionC = new Transaction(blockChainManager.getMe().getPublicKey(), blockChainManager.getMe().getPrivateKey(), payloadC, blockChainManager.getNextId(),TransactionTypeEnum.CREATION);
 					
-					blockChainManager.addBlockToBlockChain(creationB);
+					// Make block from transaction
+					Block creationB = BlockChainManager.makeBlockOutOfTransaction(transactionC);
+					
+					// Add block to blockChain
+					BlockChainManager.addBlockToBlockChain(creationB);
 					
 					break;
 
 				case 3:
-					Block block = BlockChainManager.makeBlockOutOfTransaction(blockChainManager.makeRegisterTransaction("EventHash"));
-					BlockChainManager.addBlockToBlockChain(block);
+					
+					// Make payload from data
+					// MISSING EVENT HASH
+					PayloadRegister payloadR = new PayloadRegister("EventHash");
+					
+					// Make transaction from payload
+					Transaction transactionR = new Transaction(blockChainManager.getMe().getPublicKey(), blockChainManager.getMe().getPrivateKey(), payloadR, blockChainManager.getNextId(), TransactionTypeEnum.REGISTER); 
+					
+					// Make block from transaction
+					Block registerB = BlockChainManager.makeBlockOutOfTransaction(transactionR);
+					BlockChainManager.addBlockToBlockChain(registerB);
 					break;
 				
 
@@ -80,6 +98,9 @@ public class InterfaceCommand {
 				case 6:
 					System.out.println("BlockChain is valid : " + blockChainManager.isChainValid());
 					
+				case 7:
+					blockChainManager.pushBlock();
+					
 					
 				default:
 					break;
@@ -90,30 +111,7 @@ public class InterfaceCommand {
 
 		}while(run);
 
-		/* try {
-			
-
-	
-
-
-	
-
-
-
-
-			// Genesis block
-			
-
-			// 2nd block
-			
-
-			System.err.println("\n Is blockchain valid : " + blockChain.isChainValid());
-
-		} catch (JSONException e1) {
-			e1.printStackTrace();
-		}
-		 */
-
+		sc.close();
 		blockChainManager.stopServer();
 		System.exit(0);
 
@@ -127,6 +125,7 @@ public class InterfaceCommand {
 		System.out.println(" 4. Quit ");
 		System.out.println(" 5. Add Genesis ");
 		System.out.println(" 6. Verify integrity ");
+		System.out.println(" 7. Push Block ");
 		System.out.println(" ================================================== \n");
 	}
 

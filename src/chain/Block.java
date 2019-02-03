@@ -5,7 +5,6 @@ import java.util.Date;
 
 import merkle.Convert;
 import merkle.Hash;
-import merkle.Merkle;
 
 public class Block {
 	private String hash;
@@ -28,28 +27,31 @@ public class Block {
 	}
 
 	public Block(int level, String hash, String previousHash, long timeStamp, String merkleRoot) {
-	    this.level = level;
-	    this.hash = hash;
-	    this.previousHash = previousHash;
-	    this.timeStamp = timeStamp;
-	    this.merkleRoot = merkleRoot;
-    }
+		this.level = level;
+		this.hash = hash;
+		this.previousHash = previousHash;
+		this.timeStamp = timeStamp;
+		this.merkleRoot = merkleRoot;
+	}
 
-	
+
 	public boolean addTransaction(Transaction transaction) {
-		// Check if transaction is valid / not genesis block
-		
-		if(transaction == null) return false;		
-		if((!previousHash.equals("0"))) {
-			if((!transaction.processTransaction())) {
-				System.out.println("ERROR Can't add transaction");
+
+		if(transaction == null) {
+			return false;		
+		}
+		else {
+			if(!transaction.verifiySignature()) {
 				return false;
 			}
+			else {
+				transactions.add(transaction);
+				System.out.println("Transaction added");
+				return true;
+			}
 		}
-		transactions.add(transaction);
-		System.out.println("Transaction added");
-		return true;
-}
+
+	}
 
 	public String generateHash() {
 		return Convert.bytesToHex(Hash.digestSHA256String(previousHash + Long.toString(timeStamp) + merkleRoot)).toLowerCase();
@@ -81,19 +83,19 @@ public class Block {
 	public int getLevel() {
 		return level;
 	}
-	
+
 	public int getTime() {
 		return time;
 	}
-	
+
 	public String getMerkleRoot() {
 		return merkleRoot;
 	}
-	
+
 	public void setLevel(int level) {
 		this.level = level;
 	}
-	
+
 	public void setTimestamp(long timestampGenesis) {
 		this.timeStamp = timestampGenesis + (this.time * 15);
 	}
