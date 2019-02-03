@@ -81,6 +81,16 @@ public class BlockChain {
 	public int getSize() {
 		return blocks.size();
 	}
+	
+	public void removeBlock(int index) {
+		blocks.remove(index);
+	}
+	
+	public void removeBlocksFromIndex(int index) {
+		for(int i = index; i<blocks.size()-1; i++) {
+			removeBlock(i);
+		}
+	}
 
 
 }

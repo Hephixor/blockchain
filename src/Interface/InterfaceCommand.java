@@ -27,8 +27,7 @@ public class InterfaceCommand {
 		do {
 			displayMenu();
 
-			if(sc.hasNextInt()) {
-				switch(sc.nextInt()) {
+				switch(Integer.parseInt(sc.next())) {
 				case 1:
 					blockChainManager.displayChain();
 					break;
@@ -68,8 +67,8 @@ public class InterfaceCommand {
 					// Make block from transaction
 					Block creationB = BlockChainManager.makeBlockOutOfTransaction(transactionC);
 					
-					// Add block to blockChain
-					BlockChainManager.addBlockToBlockChain(creationB);
+					// Add block to pending blocks
+					blockChainManager.addPendingBlock(creationB);
 					
 					break;
 
@@ -87,7 +86,8 @@ public class InterfaceCommand {
 					
 					// Make block from transaction
 					Block registerB = BlockChainManager.makeBlockOutOfTransaction(transactionR);
-					BlockChainManager.addBlockToBlockChain(registerB);
+					blockChainManager.addPendingBlock(registerB);
+					
 					break;
 				
 
@@ -103,19 +103,21 @@ public class InterfaceCommand {
 				
 				case 6:
 					System.out.println("BlockChain is valid : " + blockChainManager.isChainValid());
+					break;
 					
 				case 7:
 					blockChainManager.pushBlock();
+					break;
 					
 				case 8:
 					blockChainManager.getMe().displayTransactions();
+					break;
 					
 					
 				default:
 					break;
 				}
-			}
-			else {break;}
+			
 
 
 		}while(run);

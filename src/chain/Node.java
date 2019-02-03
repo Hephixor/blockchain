@@ -13,6 +13,7 @@ public class Node {
 	private PrivateKey privateKey;
 	private PublicKey publicKey;
 	private ArrayList<Transaction> transactions;
+	private ArrayList<Block> pendingBlocks;
  
 
 
@@ -20,6 +21,7 @@ public class Node {
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 		generateKeyPair();	
 		transactions = new ArrayList<Transaction>();
+		pendingBlocks = new ArrayList<Block>();
 	}
 
 	// Generate the keypair for current Node
@@ -57,6 +59,23 @@ public class Node {
 			System.out.println(transaction.toString());
 		}
 	}
+	
+	public void addPendingBlock(Block block) {
+		pendingBlocks.add(block);
+	}
+	
+	public void removePendingBlock(int index) {
+		pendingBlocks.remove(index);
+	}
+	
+	public Block getPendingBlock(int index) {
+		return pendingBlocks.get(index);
+	}
+	
+	public boolean pending() {
+		return(pendingBlocks.size()!=0);
+	}
+	
 	
 	public PrivateKey getPrivateKey() {
 		return this.privateKey;

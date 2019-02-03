@@ -164,11 +164,29 @@ public class BlockChainManager {
 	}
 	
 	public void pushBlock() {
-		addBlockToBlockChain(currentBlock);
+		if(me.pending()) {
+			blockChain.addBlock(me.getPendingBlock(0));
+			me.removePendingBlock(0);
+		}
+		else {
+			System.err.println("No pending block to push.");
+		}
 	}
 	
 	public void addTransactionToNode(Transaction transaction) {
 		me.addTransaction(transaction);
+	}
+	
+	public void addPendingBlock(Block block) {
+		me.addPendingBlock(block);
+	}
+	
+	public void removePendingBlock(int index) {
+		me.removePendingBlock(index);
+	}
+	
+	public Block getPendingBlock(int index) {
+		return me.getPendingBlock(index);
 	}
 
 }

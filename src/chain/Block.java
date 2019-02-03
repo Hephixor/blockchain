@@ -57,7 +57,39 @@ public class Block {
 		return Convert.bytesToHex(Hash.digestSHA256String(previousHash + Long.toString(timeStamp) + merkleRoot)).toLowerCase();
 	}
 
+	public boolean isBlockValid(Block previousBlock) {
+		// Verify block
+		if(!hash.equals(generateHash())){
+			System.err.println("ERROR block hash is invalid");
+			System.err.println("\nCurrently : " + getHash());
+			System.err.println("\nShould be : " + generateHash());
+
+			return false;
+		}
+		
+		if(!previousHash.equals(previousBlock.getHash())) {
+			System.err.println("ERROR block previous hash is invalid");
+			return false;
+		}
+		
+		if(level != (previousBlock.getLevel()+1)) {
+			System.err.println("ERROR block level is invalid");
+		}
+		
+		/* todo
+		if(!merkleRoot.equals(Merkle.getRootHash(transactions))) {
+			return false;
+		}
+		*/
+		
+		return true;
+	}
+
 	//Getters ....
+	
+	public ArrayList<Transaction> getTransactions(){
+		return transactions;
+	}
 
 	public String getHash() {
 		return hash;
