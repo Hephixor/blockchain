@@ -50,6 +50,15 @@ public class Transaction {
 			return true;
 		}
 		
+	@Override
+	public String toString() {
+		String[] payloadtab = {payload.toString()};
+		String pstr = "";
+		for (String string : payloadtab) {
+			pstr += string;
+		}
+		return "Transaction " + transactionId +" -> type " + type + " payload " + pstr; 
+	}
 	
 	
 	

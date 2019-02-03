@@ -107,6 +107,9 @@ public class InterfaceCommand {
 				case 7:
 					blockChainManager.pushBlock();
 					
+				case 8:
+					blockChainManager.getMe().displayTransactions();
+					
 					
 				default:
 					break;
@@ -132,6 +135,7 @@ public class InterfaceCommand {
 		System.out.println(" 5. Add Genesis ");
 		System.out.println(" 6. Verify integrity ");
 		System.out.println(" 7. Push Block ");
+		System.out.println(" 8. Display node transactions");
 		System.out.println(" ================================================== \n");
 	}
 

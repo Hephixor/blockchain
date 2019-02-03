@@ -19,6 +19,7 @@ public class Node {
 	public Node(){
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 		generateKeyPair();	
+		transactions = new ArrayList<Transaction>();
 	}
 
 	// Generate the keypair for current Node
@@ -49,6 +50,12 @@ public class Node {
 	// Add to transactions list
 	public void addTransaction(Transaction transaction) {
 		transactions.add(transaction);
+	}
+	
+	public void displayTransactions() {
+		for (Transaction transaction : transactions) {
+			System.out.println(transaction.toString());
+		}
 	}
 	
 	public PrivateKey getPrivateKey() {
