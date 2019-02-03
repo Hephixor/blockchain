@@ -61,6 +61,9 @@ public class InterfaceCommand {
 					
 					// Make transaction from payload
 					Transaction transactionC = new Transaction(blockChainManager.getMe().getPublicKey(), blockChainManager.getMe().getPrivateKey(), payloadC, blockChainManager.getNextId(),TransactionTypeEnum.CREATION);
+				
+					// Add transaction to list
+					blockChainManager.addTransaction(transactionC);
 					
 					// Make block from transaction
 					Block creationB = BlockChainManager.makeBlockOutOfTransaction(transactionC);
@@ -78,6 +81,9 @@ public class InterfaceCommand {
 					
 					// Make transaction from payload
 					Transaction transactionR = new Transaction(blockChainManager.getMe().getPublicKey(), blockChainManager.getMe().getPrivateKey(), payloadR, blockChainManager.getNextId(), TransactionTypeEnum.REGISTER); 
+					
+					// Add transaction to list
+					blockChainManager.addTransaction(transactionR);
 					
 					// Make block from transaction
 					Block registerB = BlockChainManager.makeBlockOutOfTransaction(transactionR);

@@ -166,5 +166,9 @@ public class BlockChainManager {
 	public void pushBlock() {
 		addBlockToBlockChain(currentBlock);
 	}
+	
+	public void addTransactionToNode(Transaction transaction) {
+		me.addTransaction(transaction);
+	}
 
 }
