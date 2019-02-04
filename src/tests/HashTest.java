@@ -15,8 +15,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import merkle.Convert;
 import merkle.Hash;
+import tools.Convert;
 
 class HashTest {
 	

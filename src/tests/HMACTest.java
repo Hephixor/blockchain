@@ -2,7 +2,7 @@ package tests;
 
 import org.junit.jupiter.api.Test;
 
-import merkle.Convert;
+import tools.Convert;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;

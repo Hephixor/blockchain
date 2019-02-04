@@ -5,12 +5,12 @@ import java.util.*;
 import org.json.JSONObject;
 
 import crypto.CryptoUtils;
-import merkle.Convert;
 import merkle.Merkle;
 import network.JsonUtils;
 import network.PayloadCreation;
 import network.PayloadRegister;
 import server.Server;
+import tools.Convert;
 import server.ConcurrentBlockChain;
 
 public class BlockChainManager {

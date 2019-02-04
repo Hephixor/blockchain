@@ -9,8 +9,8 @@ import java.security.Security;
 import java.security.spec.ECGenParameterSpec;
 import java.util.ArrayList;
 
-import merkle.Convert;
 import merkle.Merkle;
+import tools.Convert;
 
 public class Node {
 	private PrivateKey privateKey;

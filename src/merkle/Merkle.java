@@ -2,6 +2,8 @@ package merkle;
 
 import java.util.List;
 
+import tools.Convert;
+
 public class Merkle {
 
 	/**
