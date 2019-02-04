@@ -63,7 +63,7 @@ public class PeerConnection extends Thread {
      */
     public boolean send(Request r) {
         clientWritter.write(r.toString() + "\n");
-        return clientWritter.checkError();
+        return !clientWritter.checkError();
     }
 
     /**
