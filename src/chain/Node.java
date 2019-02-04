@@ -13,13 +13,18 @@ public class Node {
 	private PrivateKey privateKey;
 	private PublicKey publicKey;
 	private ArrayList<Transaction> transactions;
+	private ArrayList<Block> pendingBlocks;
+ 
 
 
 	public Node(){
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 		generateKeyPair();	
+		transactions = new ArrayList<Transaction>();
+		pendingBlocks = new ArrayList<Block>();
 	}
 
+	// Generate the keypair for current Node
 	public void generateKeyPair() {
 		try {
 			KeyPairGenerator keyGen = KeyPairGenerator.getInstance("ECDSA","BC");
@@ -38,14 +43,39 @@ public class Node {
 
 	
 
-	// Generate transaction
-	public Transaction generateSendTransaction(PublicKey receiver, String data ) {
-		Transaction transaction = new Transaction(publicKey, receiver , data);
+	// Sign transaction
+	public Transaction signTransaction(Transaction transaction) {
 		transaction.generateSignature(privateKey);
-		
-		transactions.add(transaction);
 		return transaction;
 	}
+	
+	// Add to transactions list
+	public void addTransaction(Transaction transaction) {
+		transactions.add(transaction);
+	}
+	
+	public void displayTransactions() {
+		for (Transaction transaction : transactions) {
+			System.out.println(transaction.toString());
+		}
+	}
+	
+	public void addPendingBlock(Block block) {
+		pendingBlocks.add(block);
+	}
+	
+	public void removePendingBlock(int index) {
+		pendingBlocks.remove(index);
+	}
+	
+	public Block getPendingBlock(int index) {
+		return pendingBlocks.get(index);
+	}
+	
+	public boolean pending() {
+		return(pendingBlocks.size()!=0);
+	}
+	
 	
 	public PrivateKey getPrivateKey() {
 		return this.privateKey;

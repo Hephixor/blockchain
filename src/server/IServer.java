@@ -12,6 +12,11 @@ public interface IServer {
     ConcurrentBlockChain getChain();
 
     /**
+     *  A reference to the current sever's consensus manager.
+     */
+    ConsensusManager getConsensusManager();
+
+    /**
      * Set the id of the node that is currently allowed to write a block.
      */
     void setLeader(int id);

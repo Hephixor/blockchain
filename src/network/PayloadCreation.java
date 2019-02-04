@@ -1,6 +1,6 @@
 package network;
 
-public class PayloadCreation {
+public class PayloadCreation extends Payload{
 	private String name;
 	private String description;
 	private String dateBegin;

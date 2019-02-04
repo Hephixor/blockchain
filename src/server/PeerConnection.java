@@ -1,5 +1,7 @@
 package server;
 
+import chain.Block;
+import server.protocol.BlockRequest;
 import server.protocol.GetBlock;
 import server.protocol.Request;
 import server.protocol.RequestParser;
@@ -11,16 +13,17 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class PeerConnection extends Thread {
+    private int id;
     private Socket socket;
     private IServer server;
     private PrintWriter clientWritter;
     private BufferedReader socketReader;
 
-    public PeerConnection(IServer server, Socket clientSocket) {
-        this(server, clientSocket, null);
+    public PeerConnection(IServer server, int id, Socket clientSocket) {
+        this(server, id, clientSocket, null);
     }
 
-    public PeerConnection(IServer server, Socket clientSocket, BufferedReader socketReader) {
+    public PeerConnection(IServer server, int id, Socket clientSocket, BufferedReader socketReader) {
         this.server = server;
         this.socket = clientSocket;
         this.socketReader = socketReader;
@@ -39,10 +42,13 @@ public class PeerConnection extends Thread {
 
                 if (request instanceof GetBlock) {
                     response = server.getChain().getBlock((GetBlock) request);
+                } else if (request instanceof BlockRequest) {
+                    Block b = ((BlockRequest) request).getBlock();
+                    server.getChain().blockReceived(b, id);
                 }
 
                 if (response != null) {
-                    // TODO: send response
+                    clientWritter.write(response.toString() + "\n");
                 }
             }
         } catch (IOException e) {
