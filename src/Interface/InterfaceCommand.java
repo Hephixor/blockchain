@@ -7,10 +7,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Scanner;
 
-import chain.Block;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import chain.BlockChainManager;
 import chain.Transaction;
 import chain.TransactionTypeEnum;
+import crypto.CryptoUtils;
+import network.JsonUtils;
 import network.PayloadCreation;
 import network.PayloadRegister;
 
@@ -169,6 +173,13 @@ public class InterfaceCommand {
 					// 5
 					System.err.println("BlockChain is valid : " + blockChainManager.isChainValid());
 					
+					JSONObject jsonO = JsonUtils.makeJson(CryptoUtils.getStringFromKey(transactionT.getPublicKey()), (PayloadCreation) transactionT.getPayload(), "");
+					try {
+						System.out.println(jsonO.toString(0));
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					break;
 					
 					

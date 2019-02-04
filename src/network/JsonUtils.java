@@ -3,13 +3,48 @@ package network;
 
 import java.security.PublicKey;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import chain.Transaction;
 import crypto.CryptoUtils;
 
 public class JsonUtils {
 
+	
+	public Payload payloadFromJson(String json) {
+		
+		try {
+			JSONObject payload = new JSONObject(json);
+			
+			//C'est un register
+			if(payload.has("event_hash")) {
+				PayloadRegister payloadR = new PayloadRegister(payload.get("event_hash").toString());
+				return payloadR;
+			}
+			
+			//C'est un create
+			else {
+				PayloadCreation payloadC = new PayloadCreation(payload.getString("name"),payload.getString("description"),payload.getString("location"),payload.getString("begin"),payload.getString("end_subscription"),payload.getString("end"),payload.getInt("min"),payload.getInt("max"));
+				return payloadC;
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	public Transaction transactionFromJson(String json) {
+		if(json != null) {
+	//	JSONObject jsonT =  new JSONObject(json);
+		//Transaction transaction = new Transaction(jsonT.getString("signature").getBytes(),)
+		
+		}
+		return null;
+	}
 
+	
 
 	public static JSONObject makeJsonHead(JSONObject json, String pkey, Boolean isRegister)  {
 		try {

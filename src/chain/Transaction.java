@@ -5,13 +5,13 @@ import crypto.CryptoUtils;
 import network.Payload;
 
 public class Transaction {
-	
+
 	public int transactionId; 
 	public PublicKey senderPUK; 
 	public TransactionTypeEnum type;
 	public Payload payload; 
 	public byte[] signature; 
-	
+
 	// Constructor
 	public Transaction(PublicKey senderPUK, PrivateKey senderPRI, Payload payload, int id, TransactionTypeEnum type) {
 		this.type = type;
@@ -20,7 +20,15 @@ public class Transaction {
 		this.payload = payload;
 		this.signature = generateSignature(senderPRI);
 	}
-	
+
+	// Constructor
+	public Transaction(PublicKey senderPUK, byte[] signature, Payload payload, int id, TransactionTypeEnum type) {
+		this.type = type;
+		this.transactionId = id;
+		this.senderPUK = senderPUK;
+		this.payload = payload;
+		this.signature = signature;
+	}
 
 	// Generate Signature with all wanted protocols
 	public byte[] generateSignature(PrivateKey privateKey) {
@@ -32,24 +40,24 @@ public class Transaction {
 		String data = CryptoUtils.getStringFromKey(senderPUK) + this.payload.toString();
 		return CryptoUtils.verifyECDSASignature(senderPUK, data.getBytes(), signature);
 	}
-	
-	
+
+
 	public Payload getPayload() {
 		return payload;
 	}
-	
-	
+
+
 	// Onto the real thing
-	
+
 	public boolean processTransaction() {
-			
-			if(verifiySignature() == false) {
-				System.out.println("ERROR Transaction Signature could not be verified");
-				return false;
-			}
-			return true;
+
+		if(verifiySignature() == false) {
+			System.out.println("ERROR Transaction Signature could not be verified");
+			return false;
 		}
-		
+		return true;
+	}
+
 	/* @Override
 	public String toString() {
 		String[] payloadtab = {payload.toString()};
@@ -59,10 +67,13 @@ public class Transaction {
 		}
 		return "Transaction " + transactionId +" -> type " + type + " payload " + pstr; 
 	}
-	*/
-	
-	
-	
-	
-	
+	 */
+
+
+	public PublicKey getPublicKey() {
+		return senderPUK;
+	}
+
+
+
 }

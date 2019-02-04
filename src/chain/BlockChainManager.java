@@ -37,7 +37,8 @@ public class BlockChainManager {
 		
 		// Si pas de genesis block
 		if(blockChain.getSize()==0) {
-			newBlock = new Block("0",0,0, hash);
+			//newBlock = new Block("0",0,0, hash);
+			newBlock = new Block(0,"0","0",0,"0");
 		}
 		// Sinon on ajoute le block
 		else {
@@ -126,7 +127,7 @@ public class BlockChainManager {
 		return blockChain.isChainValid();
 	}
 
-	public static void addBlockToBlockChain(Block b) {
+	public void addBlockToBlockChain(Block b) {
 		blockChain.addBlock(b);
 	}
 
