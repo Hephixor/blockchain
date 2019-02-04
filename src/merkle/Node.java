@@ -16,10 +16,7 @@ public class Node {
 		leftChild = null;
 		rightChild = null;
 		byte[] zero = {0};
-		this.hash = Hash.digestSHA256(Bytes.concat(
-				zero,
-				data 
-		));
+		this.hash = Hash.digestHMAC(data, zero);
 	}
 	
 	/**
@@ -31,11 +28,11 @@ public class Node {
 		this.leftChild = leftChild;
 		this.rightChild = rightChild;
 		byte[] one = {1};
-		this.hash = Hash.digestSHA256(Bytes.concat(
-				one,
-				leftChild.getHash(), 
-				rightChild.getHash()
-		));
+		this.hash = Hash.digestHMAC(
+				Bytes.concat(
+						leftChild.getHash(), 
+						rightChild.getHash()),
+				one);
 	}
 
 	public byte[] getHash() {

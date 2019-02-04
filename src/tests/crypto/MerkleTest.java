@@ -20,10 +20,10 @@ public class MerkleTest {
 	void test_Empty() throws IOException {
 		byte[] root = Convert.fileToBytes(dir+"empty/root");
 		
-		String[] datas = {};
+		String[] datas = null;
 		
 		byte[] my_root = Merkle.getRootHash(datas);
-		
+
 		assert Arrays.equals(root, my_root);
 	}
 	

@@ -1,9 +1,5 @@
 package merkle;
 
-import java.util.ArrayList;
-
-import chain.Transaction;
-
 public class Merkle {
 
 	/**
@@ -12,6 +8,11 @@ public class Merkle {
 	 * @return Racine de l'arbre de Merkle représentant le tableau de données passé en paramètres.
 	 */
 	public static byte[] getRootHash(byte[][] datas) {
+		if(datas == null || datas.length == 0) {
+			byte[] two = {2};
+			return Hash.digestHMAC(null, two);
+		}
+		
 		Node root = merkleTree(datas);
 		return root.getHash();
 	}
@@ -22,6 +23,11 @@ public class Merkle {
 	 * @return Racine de l'arbre de Merkle représentant le tableau de Strings passé en paramètres.
 	 */
 	public static byte[] getRootHash(String[] datas) {
+		if(datas == null || datas.length == 0) {
+			byte[] two = {2};
+			return Hash.digestHMAC(null, two);
+		}
+		
 		Node root = merkleTree(datas);
 		return root.getHash();
 	}

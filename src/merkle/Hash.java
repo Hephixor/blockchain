@@ -29,12 +29,12 @@ public class Hash {
 	 * @param data tableau de bytes à hasher.
 	 * @return hash sur 256 bits à stocker dans un noeud de Merkle Tree.
 	 */
-	public static byte[] digestHMAC(byte[] data, String key) {
+	public static byte[] digestHMAC(byte[] data, byte[] key) {
 	    Mac hasher = null;
 
 		try {
 			hasher = Mac.getInstance("HmacSHA256");
-			hasher.init(new SecretKeySpec(Convert.stringToBytes(key), "HmacSHA256"));
+			hasher.init(new SecretKeySpec(key, "HmacSHA256"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -58,7 +58,4 @@ public class Hash {
 	    return digestSHA256(Convert.stringToBytes(data));
     }
 	
-	public static byte[] digestHMACString(String data, String key) {
-	    return digestHMAC(Convert.stringToBytes(data), key);
-    }
 }
