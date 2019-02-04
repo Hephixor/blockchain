@@ -102,6 +102,10 @@ public class PeersManager {
         return allowedAdresses.size();
     }
 
+    public void broadcast(Request r) {
+        peerConnections.values().forEach(peer -> send(peer.getIdentifier(), r));
+    }
+
     public void send(int targetId, Request r) {
         if (peerConnections.get(targetId) == null) {
             return;

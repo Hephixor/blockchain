@@ -79,4 +79,8 @@ public class PeerConnection extends Thread {
     public Socket getSocket() {
         return socket;
     }
+
+    public int getIdentifier() {
+        return id;
+    }
 }

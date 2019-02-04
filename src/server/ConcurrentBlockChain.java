@@ -3,6 +3,7 @@ package server;
 import chain.Block;
 import chain.BlockChain;
 import chain.BlockChainManager;
+import server.protocol.BlockRequest;
 import server.protocol.Blocks;
 import server.protocol.GetBlocks;
 import server.protocol.NewTransaction;
@@ -28,7 +29,7 @@ public class ConcurrentBlockChain {
 
     public void newTransaction(NewTransaction transactionRequest) {
         blockChainLock.writeLock().lock();
-        blockChainManager.addTransaction(transactionRequest.getTransaction());
+        blockChainManager.addPendingTransaction(transactionRequest.getTransaction());
         blockChainLock.writeLock().unlock();
     }
 
@@ -42,11 +43,18 @@ public class ConcurrentBlockChain {
 
     public void pushBendingBlocks() {
         blockChainLock.writeLock().lock();
-        while (blockChainManager.getMe().pending()) {
-            blockChainManager.makeBlockFromPendings();
+        blockChainManager.makeBlockFromPendings();
+        Block lastBlock = null;
+        if (blockChainManager.getMe().pending()) {
             blockChainManager.pushBlock();
+            int lastIndex = blockChainManager.getBlockChain().getSize() - 1;
+            lastBlock = blockChainManager.getBlockChain().getBlockAtIndex(lastIndex);
+            System.out.println("Pushed bloc to the blochain:\n" + lastBlock.toString());
         }
         blockChainLock.writeLock().unlock();
+        if (lastBlock != null) {
+            server.getPeersManager().broadcast(new BlockRequest(lastBlock));
+        }
     }
 
     public boolean addBlock(Block block, int emitterId) {

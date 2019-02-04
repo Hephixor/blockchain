@@ -38,7 +38,9 @@ public class JsonUtils {
 
 			//C'est un create
 			else {
-				PayloadCreation payloadC = new PayloadCreation(payload.getString("name"),payload.getString("description"),payload.getString("location"),payload.getString("begin"),payload.getString("end_subscription"),payload.getString("end"),payload.getInt("min"),payload.getInt("max"));
+			    JSONObject date = payload.getJSONObject("date");
+			    JSONObject limits = payload.getJSONObject("limits");
+				PayloadCreation payloadC = new PayloadCreation(payload.getString("name"),payload.getString("description"),payload.getString("location"),date.getString("begin"),date.getString("end_subscription"),date.getString("end"),limits.getInt("min"),limits.getInt("max"));
 				return payloadC;
 			}
 		} catch (JSONException e) {
@@ -53,7 +55,7 @@ public class JsonUtils {
 		if(json != null) {
 			try {
 				JSONObject jsonT =  new JSONObject(json);
-				if(jsonT.getString("type_transact")==("creation")) {
+				if(jsonT.getString("type_transact").equals("creation")) {
 					Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 			        KeyFactory fact = KeyFactory.getInstance("ECDSA", "BC");
 			        ECParameterSpec spec = ECNamedCurveTable.getParameterSpec("secp256r1");
@@ -61,7 +63,7 @@ public class JsonUtils {
 			        ECPublicKeySpec pubKey = new ECPublicKeySpec(curve.decodePoint(Hex.decode("029e15edf9abdbf2bbcbedad647c881ca6d0a068552f8dc459c4fef3439254103e")),spec);
 			        PublicKey vKey = fact.generatePublic(pubKey);
 			        
-			        Transaction transaction = new Transaction(vKey,payloadFromJson(jsonT.getString("payload")), 0, TransactionTypeEnum.CREATION);
+			        Transaction transaction = new Transaction(vKey,payloadFromJson(jsonT.getJSONObject("payload").toString()), 0, TransactionTypeEnum.CREATION);
 					return transaction;
 				}
 				// REGISTER
@@ -158,7 +160,7 @@ public class JsonUtils {
 		try {
 			if(pkey != null) {	
 				
-				if(payload!=null && eventHash == "") {
+				if(payload!=null && eventHash.equals("")) {
 					makeJsonHead(json, pkey, false);
 					json.put("payload", makeJsonPayload((PayloadCreation) payload));
 				}
