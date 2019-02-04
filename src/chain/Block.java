@@ -136,5 +136,20 @@ public class Block {
 	public int getMaxTransaction() {
 		return nbMaxTransaction;
 	}
+
+    @Override
+    public String toString() {
+        return "Block{" +
+                "hash='" + hash + '\'' +
+                ", previousHash='" + previousHash + '\'' +
+                ", data='" + data + '\'' +
+                ", timeStamp=" + timeStamp +
+                ", level=" + level +
+                ", time=" + time +
+                ", merkleRoot='" + merkleRoot + '\'' +
+                ", transactions=" + transactions +
+                ", nbMaxTransaction=" + nbMaxTransaction +
+                '}';
+    }
 }
 

@@ -1,10 +1,7 @@
 package server;
 
 import chain.Block;
-import server.protocol.BlockRequest;
-import server.protocol.GetBlock;
-import server.protocol.Request;
-import server.protocol.RequestParser;
+import server.protocol.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,6 +24,7 @@ public class PeerConnection extends Thread {
         this.server = server;
         this.socket = clientSocket;
         this.socketReader = socketReader;
+        this.id = id;
     }
 
     @Override
@@ -40,11 +38,13 @@ public class PeerConnection extends Thread {
                 Request request = RequestParser.parserRequest(socketReader.readLine());
                 Object response = null;
 
-                if (request instanceof GetBlock) {
-                    response = server.getChain().getBlock((GetBlock) request);
-                } else if (request instanceof BlockRequest) {
+                if (request instanceof BlockRequest) {
                     Block b = ((BlockRequest) request).getBlock();
-                    server.getChain().blockReceived(b, id);
+                    server.getChain().addBlock(b, id);
+                } else if (request instanceof GetBlocks) {
+                    response = server.getChain().getBlocs((GetBlocks) request);
+                } else if (request instanceof NewTransaction) {
+                    server.getChain().newTransaction((NewTransaction) request);
                 }
 
                 if (response != null) {
@@ -59,9 +59,11 @@ public class PeerConnection extends Thread {
 
     /**
      * Sends the given request to the peer.
+     * Returns false if the peer can't be reached, true otherwise.
      */
-    public void send(Request r) {
+    public boolean send(Request r) {
         clientWritter.write(r.toString() + "\n");
+        return clientWritter.checkError();
     }
 
     /**

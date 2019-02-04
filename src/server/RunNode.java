@@ -1,6 +1,7 @@
 package server;
 
 import chain.BlockChain;
+import chain.BlockChainManager;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -27,7 +28,9 @@ public class RunNode {
         }
 
         List<IpAddress> allowedPeers = readAllowedPeers(peersFileName);
-        ConcurrentBlockChain blockchain = new ConcurrentBlockChain(new BlockChain());
+        BlockChainManager manager = new BlockChainManager();
+        manager.makeGenesis();
+        ConcurrentBlockChain blockchain = new ConcurrentBlockChain(manager);
         Server server = null;
 
         try {

@@ -4,27 +4,28 @@ import merkle.Hash;
 
 import java.nio.ByteBuffer;
 import java.time.Instant;
-import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class ConsensusManager implements Runnable {
-    private static final int INTERVAL_IN_MILLIS = 5000;
+    public static final int INTERVAL_IN_MILLIS = 5000;
 
     private IServer server;
-    private final int PEERS_COUNT;
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     public ConsensusManager(IServer server) {
         this.server = server;
-        PEERS_COUNT = server.getMaxPeersCount();
     }
 
     @Override
     public void run() {
         Runnable task = () -> {
-            server.setLeader(computeCurrentLeader());
+            int currentLeader = computeCurrentLeader();
+            System.out.println("The leader is now " + currentLeader);
+            if (currentLeader == server.getNodeId()) {
+                server.getChain().pushBendingBlocks();
+            }
         };
         scheduler.scheduleAtFixedRate(task, 0, INTERVAL_IN_MILLIS, TimeUnit.MILLISECONDS);
     }
@@ -56,6 +57,6 @@ public class ConsensusManager implements Runnable {
     private int leaderAtNthInterval(int s) {
         byte[] data = Hash.digestSHA256String(Integer.toString(s));
         int hashInt = ByteBuffer.wrap(data).getInt();
-        return Math.abs(hashInt % PEERS_COUNT);
+        return Math.abs(hashInt % server.getPeersManager().getMaxPeersCount());
     }
 }

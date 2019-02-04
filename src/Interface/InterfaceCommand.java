@@ -24,9 +24,7 @@ public class InterfaceCommand {
 	public static BlockChainManager blockChainManager;
 
 	public static void main(String[] args) {
-		try {
-			blockChainManager = new BlockChainManager();
-		} catch (IOException e) {e.printStackTrace();}
+	    blockChainManager = new BlockChainManager();
 		boolean run = true;
 		Scanner sc = new Scanner(System.in);
 
@@ -199,7 +197,6 @@ public class InterfaceCommand {
 		}while(run);
 
 		sc.close();
-		blockChainManager.stopServer();
 		System.exit(0);
 
 	}	

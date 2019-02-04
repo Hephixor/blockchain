@@ -2,22 +2,22 @@ package server;
 
 public interface IServer {
     /**
-     * Get the number of allowed addresses.
-     */
-    int getMaxPeersCount();
-
-    /**
-     *  A Reference to the current server's blockchain
+     *  A Reference to the server's blockchain
      */
     ConcurrentBlockChain getChain();
 
     /**
-     *  A reference to the current sever's consensus manager.
+     *  A reference to the sever's consensus manager.
      */
     ConsensusManager getConsensusManager();
 
     /**
-     * Set the id of the node that is currently allowed to write a block.
+     * A reference to the server's peers manager.
      */
-    void setLeader(int id);
+    PeersManager getPeersManager();
+
+    /**
+     * Returns the id of the current node.
+     */
+    int getNodeId();
 }

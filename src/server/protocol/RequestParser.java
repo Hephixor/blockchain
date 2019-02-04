@@ -1,6 +1,8 @@
 package server.protocol;
 
 import chain.Block;
+import chain.Transaction;
+import network.JsonUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,9 +13,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RequestParser {
-    // Get block number n for the network.
-    static final Pattern GET_BLOCK = Pattern.compile("GET_BLOCK/(\\d+)/");
-
     // Ask the network for blocks which number is above n.
     static final Pattern GET_BLOCKS = Pattern.compile("GET_BLOCKS/(\\d+)/");
 
@@ -26,6 +25,9 @@ public class RequestParser {
     // Broadcast this node's id to the network.
     static final Pattern ID = Pattern.compile("ID/(\\d+)/");
 
+    // Receive a new Transaction from the network
+    static final Pattern NEW_TRANSACTION = Pattern.compile("NEW_TRANSACTION/(.*)/");
+
     /**
      * Parse a client request. Returns null if the request is invalid.
      */
@@ -34,30 +36,19 @@ public class RequestParser {
             return null;
         }
 
-        if (request.matches(GET_BLOCK.pattern())) {
-            return parseGetBlock(request);
-        } else if (request.matches(GET_BLOCKS.pattern())) {
+        if (request.matches(GET_BLOCKS.pattern())) {
             return parseGetBlocks(request);
         } else if (request.matches(BLOCKS.pattern())) {
             return parseBlocks(request);
         } else if (request.matches(BLOCK.pattern())) {
             return parseBlock(request);
+        } else if (request.matches(NEW_TRANSACTION.pattern())) {
+            return parseNewTransaction(request);
         } else if (request.matches(ID.pattern())) {
             return parseId(request);
         }
 
         return null;
-    }
-
-    /**
-     * Parse a GET_BLOCK request. Returns null in case of  invalid request.
-     * ex: GET_BLOCK/1/
-     */
-    private static GetBlock parseGetBlock(String request) {
-        Matcher m = GET_BLOCK.matcher(request);
-        m.find();
-        Integer blockNumber = Integer.valueOf(m.group(1));
-        return new GetBlock(blockNumber);
     }
 
     /**
@@ -93,12 +84,26 @@ public class RequestParser {
 
     /**
      * Parse a BLOCK request. Returns null in case of  invalid request.
-     * ex: BLOCK/{"level":1,"hash":"0x45fe","previous_hash":"0xfffff","timestamp":"2010-01-01T12:00:00Z","merkel_root":"0xfffff"}/
+     * ex: BLOCK/{"level":1,"hash":"0x45fe","previous_hash":"0xfffff","timestamp":"2010-01-01T12:00:00Z","merkle_root":"0xfffff"}/
      */
     private static BlockRequest parseBlock(String request) {
         Matcher m = BLOCK.matcher(request);
         m.find();
         return BlockRequest.fromJSONString(m.group(1));
+    }
+
+    /**
+     * Parse a NEW_TRANSACTION request. Returns null in case of  invalid request.
+     * ex: NEW_TRANSACTION/<jsonTransaction>/
+     */
+    private static Request parseNewTransaction(String request) {
+        Matcher m = NEW_TRANSACTION.matcher(request);
+        m.find();
+        Transaction transaction = JsonUtils.transactionFromJson(m.group(1));
+        if (transaction == null) {
+            return null;
+        }
+        return new NewTransaction(transaction);
     }
 
     /**

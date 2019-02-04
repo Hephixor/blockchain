@@ -2,44 +2,100 @@ package server;
 
 import chain.Block;
 import chain.BlockChain;
-import server.protocol.BlockRequest;
-import server.protocol.GetBlock;
+import chain.BlockChainManager;
+import server.protocol.Blocks;
+import server.protocol.GetBlocks;
+import server.protocol.NewTransaction;
 
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class ConcurrentBlockChain {
-    private BlockChain blockChain;
+    private BlockChainManager blockChainManager;
     private ReadWriteLock blockChainLock = new ReentrantReadWriteLock();
     private IServer server;
 
-    public ConcurrentBlockChain(BlockChain blockChain) {
-        this.blockChain = blockChain;
+    public ConcurrentBlockChain(BlockChainManager blockChainManager) {
+        this.blockChainManager = blockChainManager;
     }
 
     public void setServer(IServer server) {
         this.server = server;
     }
 
-    public BlockRequest getBlock(GetBlock getBlock) {
-        BlockRequest result = null;
-        blockChainLock.readLock().lock();
-        Block b = blockChain.getBlockAtIndex(getBlock.getBlockNumber());
-        if (b != null) {
-            result = new BlockRequest(b);
-        }
-        blockChainLock.readLock().unlock();
-        return result;
+    public void newTransaction(NewTransaction transactionRequest) {
+        blockChainLock.writeLock().lock();
+        blockChainManager.addTransaction(transactionRequest.getTransaction());
+        blockChainLock.writeLock().unlock();
     }
 
-    public void blockReceived(Block block, int nodeId) {
-        int expectedId = server.getConsensusManager().leaderAtTime(block.getTimeStamp());
-        if (expectedId != nodeId) {
-            System.err.println("Attempt to create a block from a non leader node: " + nodeId);
-            return;
+    public Blocks getBlocs(GetBlocks getBlocksRequest) {
+        ArrayList<Block> blocks = new ArrayList<>();
+        for (int i = getBlocksRequest.getMinBlockNumber() + 1; i < blockChainManager.getBlockChain().getSize(); i++) {
+            blocks.add(blockChainManager.getBlockChain().getBlockAtIndex(i));
         }
+        return new Blocks(blocks);
+    }
+
+    public void pushBendingBlocks() {
         blockChainLock.writeLock().lock();
-        blockChain.addBlock(block);
+        while (blockChainManager.getMe().pending()) {
+            blockChainManager.makeBlockFromPendings();
+            blockChainManager.pushBlock();
+        }
         blockChainLock.writeLock().unlock();
+    }
+
+    public boolean addBlock(Block block, int emitterId) {
+        boolean added = false;
+        blockChainLock.writeLock().lock();
+        if (checkBlock(block, emitterId)) {
+            blockChainManager.addBlockToBlockChain(block);
+            added = true;
+        } else {
+            System.err.println("Refused invalid block:\n" + block.toString());
+        }
+        blockChainLock.writeLock().unlock();
+        return added;
+    }
+
+    public boolean checkBlock(Block block, int emitterId) {
+        long timeDiff = Math.abs(Instant.now().toEpochMilli() - block.getTimeStamp());
+        if (timeDiff > ConsensusManager.INTERVAL_IN_MILLIS * 2) {
+            System.err.println("New block's timestamp is too far from now !");
+            return false;
+        }
+
+        int expectedId = server.getConsensusManager().leaderAtTime(block.getTimeStamp());
+        if (expectedId != emitterId) {
+            System.err.println("Attempt to create a block from a non leader node: " + emitterId);
+            return false;
+        }
+
+        blockChainLock.writeLock().lock();
+        blockChainManager.getBlockChain().addBlock(block);
+        boolean valid = blockChainManager.isChainValid();
+        blockChainManager.getBlockChain().removeBlock(blockChainManager.getBlockChain().getSize() - 1);
+        blockChainLock.writeLock().unlock();
+
+        return valid;
+    }
+
+    public boolean checkBlocs(List<Block> blocks, int emitterId) {
+        blockChainLock.writeLock().lock();
+        int removeFrom = blockChainManager.getBlockChain().getSize();
+        int currentBlock = 0;
+
+
+        while (currentBlock < blockChainManager.getBlockChain().getSize() - 1 && addBlock(blocks.get(currentBlock), emitterId)) {
+            currentBlock++;
+        }
+        blockChainManager.getBlockChain().removeBlocksFromIndex(removeFrom);
+        blockChainLock.writeLock().unlock();
+
+        return currentBlock == blocks.size();
     }
 }

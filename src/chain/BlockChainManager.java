@@ -18,18 +18,13 @@ public class BlockChainManager {
 	public static Transaction genesisTransaction;
 
 	public static BlockChain blockChain;
-	public static ConcurrentBlockChain concurrentBlockChain;
-	public static Server server;
 	public static Node me;
 	private static int nbGeneratedTransaction = 0; 
 
-	public BlockChainManager() throws IOException {
+	public BlockChainManager() {
 		// Create BlockChain
-		blockChain = new BlockChain();		
-		concurrentBlockChain = new ConcurrentBlockChain(blockChain);
-		server = new Server(new ArrayList<>(), concurrentBlockChain);
+		blockChain = new BlockChain();
 		me = new Node();
-		System.out.println("Server started listening on port "+server.getDefaultPort());
 	}
 
 	public static Block createNewBlock(String hash) {
@@ -131,24 +126,12 @@ public class BlockChainManager {
 		blockChain.addBlock(b);
 	}
 
-	public void stopServer() {
-		server.stop();
-	}
-
 	public static Transaction getGenesisTransaction() {
 		return genesisTransaction;
 	}
 
-	public static BlockChain getBlockChain() {
+	public BlockChain getBlockChain() {
 		return blockChain;
-	}
-
-	public static ConcurrentBlockChain getConcurrentBlockChain() {
-		return concurrentBlockChain;
-	}
-
-	public static Server getServer() {
-		return server;
 	}
 
 	public Node getMe() {
