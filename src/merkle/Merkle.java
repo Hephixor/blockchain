@@ -1,5 +1,7 @@
 package merkle;
 
+import java.util.List;
+
 public class Merkle {
 
 	/**
@@ -17,6 +19,20 @@ public class Merkle {
 		return root.getHash();
 	}
 	
+	/**
+	 * Construit un arbre de Merkle à partir d'une List<String> (non hashées).
+	 * @param datas List<String> de Strings non hashées
+	 * @return Racine de l'arbre de Merkle représentant la List<String> passée en paramètres.
+	 */
+	public static byte[] getRootHash(List<String> datas) {
+		if(datas == null || datas.size() == 0) {
+			byte[] two = {2};
+			return Hash.digestHMAC(null, two);
+		}
+		
+		Node root = merkleTree(datas.toArray(new String[0]));
+		return root.getHash();	
+	}
 	/**
 	 * Construit un arbre de Merkle à partir d'un tableau de Strings non hashées.
 	 * @param datas Tableau de Strings non hashées

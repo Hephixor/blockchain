@@ -116,7 +116,7 @@ public class Node {
 			trs.add(transaction.toString());
 		}
 		
-		String roothash = Convert.bytesToHex(Merkle.getRootHash((String[])trs.toArray()));
+		String roothash = Convert.bytesToHex(Merkle.getRootHash(trs));
 		
 		Block currentBlock = new Block(previousBlock.getHash(), previousBlock.getLevel()+1, previousBlock.getTime()+1,roothash);
 		for(int i = 0 ; i < currentBlock.getMaxTransaction(); i++) {
