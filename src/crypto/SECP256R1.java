@@ -9,7 +9,7 @@ import org.bouncycastle.jce.spec.ECPublicKeySpec;
 import org.bouncycastle.math.ec.ECCurve;
 import org.bouncycastle.util.encoders.Hex;
 
-import merkle.Convert;
+import tools.Convert;
 
 import java.security.Signature;
 import java.security.PrivateKey;

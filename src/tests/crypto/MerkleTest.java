@@ -8,9 +8,9 @@ import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 
 import merkle.Bytes;
-import merkle.Convert;
 import merkle.Hash;
 import merkle.Merkle;
+import tools.Convert;
 
 public class MerkleTest {
 
@@ -124,5 +124,5 @@ public class MerkleTest {
 		
 		assert Arrays.equals(my_root, root);
 	}
-
+	
 }

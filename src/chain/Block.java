@@ -3,9 +3,9 @@ package chain;
 import java.util.ArrayList;
 import java.util.Date;
 
-import merkle.Convert;
 import merkle.Hash;
 import merkle.Merkle;
+import tools.Convert;
 
 public class Block {
 	private String hash;

@@ -7,7 +7,7 @@ import java.util.Arrays;
 import org.bouncycastle.util.encoders.Hex;
 import org.junit.jupiter.api.Test;
 
-import merkle.Convert;
+import tools.Convert;
 
 public class HexTest {
 

@@ -5,8 +5,8 @@ import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 
-import merkle.Convert;
 import merkle.Hash;
+import tools.Convert;
 
 public class Sha256Test {
 
