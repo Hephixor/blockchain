@@ -62,13 +62,13 @@ public class InterfaceCommand {
 					Transaction transactionC = new Transaction(blockChainManager.getMe().getPublicKey(), blockChainManager.getMe().getPrivateKey(), payloadC, blockChainManager.getNextId(),TransactionTypeEnum.CREATION);
 				
 					// Add transaction to list
-					blockChainManager.addTransaction(transactionC);
+					blockChainManager.addPendingTransaction(transactionC);
 					
 					// Make block from transaction
-					Block creationB = BlockChainManager.makeBlockOutOfTransaction(transactionC);
+					//Block creationB = BlockChainManager.makeBlockOutOfTransaction(transactionC);
 					
 					// Add block to pending blocks
-					blockChainManager.addPendingBlock(creationB);
+					//blockChainManager.addPendingBlock(creationB);
 					
 					break;
 
@@ -82,11 +82,11 @@ public class InterfaceCommand {
 					Transaction transactionR = new Transaction(blockChainManager.getMe().getPublicKey(), blockChainManager.getMe().getPrivateKey(), payloadR, blockChainManager.getNextId(), TransactionTypeEnum.REGISTER); 
 					
 					// Add transaction to list
-					blockChainManager.addTransaction(transactionR);
+					blockChainManager.addPendingTransaction(transactionR);
 					
 					// Make block from transaction
-					Block registerB = BlockChainManager.makeBlockOutOfTransaction(transactionR);
-					blockChainManager.addPendingBlock(registerB);
+					//Block registerB = BlockChainManager.makeBlockOutOfTransaction(transactionR);
+					//blockChainManager.addPendingBlock(registerB);
 					
 					break;
 				
@@ -113,6 +113,14 @@ public class InterfaceCommand {
 					blockChainManager.getMe().displayTransactions();
 					break;
 					
+				case 9:
+					blockChainManager.getMe().displayPendingTransaction();
+					break;
+				
+				case 10:
+					blockChainManager.makeBlockFromPendings();
+					break;
+					
 					
 				default:
 					break;
@@ -137,7 +145,9 @@ public class InterfaceCommand {
 		System.out.println(" 5. Add Genesis ");
 		System.out.println(" 6. Verify integrity ");
 		System.out.println(" 7. Push Block ");
-		System.out.println(" 8. Display node transactions");
+		System.out.println(" 8. Display node transactions ");
+		System.out.println(" 9. Display pending transactions ");
+		System.out.println(" 10.Make block from pending transactions ");
 		System.out.println(" ================================================== \n");
 	}
 

@@ -50,7 +50,7 @@ public class Transaction {
 			return true;
 		}
 		
-	@Override
+	/* @Override
 	public String toString() {
 		String[] payloadtab = {payload.toString()};
 		String pstr = "";
@@ -59,6 +59,7 @@ public class Transaction {
 		}
 		return "Transaction " + transactionId +" -> type " + type + " payload " + pstr; 
 	}
+	*/
 	
 	
 	

@@ -9,18 +9,21 @@ import java.security.Security;
 import java.security.spec.ECGenParameterSpec;
 import java.util.ArrayList;
 
+import merkle.Convert;
+import merkle.Merkle;
+
 public class Node {
 	private PrivateKey privateKey;
 	private PublicKey publicKey;
 	private ArrayList<Transaction> transactions;
+	private ArrayList<Transaction> pendingTransactions;
 	private ArrayList<Block> pendingBlocks;
- 
-
 
 	public Node(){
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 		generateKeyPair();	
 		transactions = new ArrayList<Transaction>();
+		pendingTransactions = new ArrayList<Transaction>();
 		pendingBlocks = new ArrayList<Block>();
 	}
 
@@ -76,6 +79,22 @@ public class Node {
 		return(pendingBlocks.size()!=0);
 	}
 	
+	public void addPendingTransaction(Transaction transaction) {
+		pendingTransactions.add(transaction);
+	}
+	
+	public void removePendingTransaction(int index) {
+		pendingBlocks.remove(index);
+	}
+	
+	public Transaction getPendingTransaction(int index) {
+		return pendingTransactions.get(index);
+	}
+	
+	public boolean pendingTransaction() {
+		return(pendingTransactions.size()!=0);
+	}
+	
 	
 	public PrivateKey getPrivateKey() {
 		return this.privateKey;
@@ -83,6 +102,28 @@ public class Node {
 
 	public PublicKey getPublicKey() {
 		return this.publicKey;
+	}
+
+	public void displayPendingTransaction() {
+		for (Transaction transaction : pendingTransactions) {
+			transaction.toString();
+		}
+	}
+
+	public void makeBlockFromPendings(Block previousBlock) {		
+		ArrayList<String> trs = new ArrayList<String>();
+		for (Transaction transaction : pendingTransactions) {
+			trs.add(transaction.toString());
+		}
+		
+		String roothash = Convert.bytesToHex(Merkle.getRootHash((String[])trs.toArray()));
+		
+		Block currentBlock = new Block(previousBlock.getHash(), previousBlock.getLevel()+1, previousBlock.getTime()+1,roothash);
+		for(int i = 0 ; i < currentBlock.getMaxTransaction(); i++) {
+			currentBlock.addTransaction(pendingTransactions.get(i));
+			transactions.add(pendingTransactions.get(i));
+			pendingTransactions.remove(i);
+		}
 	}
 
 

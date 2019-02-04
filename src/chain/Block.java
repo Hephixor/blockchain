@@ -5,6 +5,7 @@ import java.util.Date;
 
 import merkle.Convert;
 import merkle.Hash;
+import merkle.Merkle;
 
 public class Block {
 	private String hash;
@@ -15,7 +16,7 @@ public class Block {
 	private int time; // time step
 	public String merkleRoot;
 	public ArrayList<Transaction> transactions = new ArrayList<Transaction>(); 
-
+	final int nbMaxTransaction = 10;
 
 	public Block(String previousHash, int level, int time, String rootHash) {
 		this.previousHash = previousHash;
@@ -131,4 +132,9 @@ public class Block {
 	public void setTimestamp(long timestampGenesis) {
 		this.timeStamp = timestampGenesis + (this.time * 15);
 	}
+	
+	public int getMaxTransaction() {
+		return nbMaxTransaction;
+	}
 }
+

@@ -13,7 +13,6 @@ public class BlockChain {
 	public BlockChain(Block genesis) {
 		blocks = new ArrayList<Block>();
 		addBlock(genesis);
-
 	}
 
 	//Verify BlockChain integrity.. More to do here
@@ -51,11 +50,6 @@ public class BlockChain {
 				System.err.println("ERROR misordered levels");
 				return false;
 			}
-
-			/* if(!currentBlock.getHash().substring( 0, difficulty).equals(hashTarget)) {
-				System.out.println("ERROR block is not correctly mined");
-				return false;
-			} */
 
 		}
 

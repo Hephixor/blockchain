@@ -112,35 +112,4 @@ public class JsonUtils {
 		return json;
 	}
 
-
-
-	/* 
-	  public static void sendToClient(HttpServletResponse resp, JSONObject json) throws JSONException {
-		resp.setContentType("text/plain");
-		resp.setCharacterEncoding("UTF-8");
-
-		PrintWriter out = null;
-		try {
-			out = resp.getWriter();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		out.println(json.toString(3));
-		out.flush();
-	} 
-
-		public static String getFieldValue(HttpServletRequest req, String fieldname) {
-		String value = req.getParameter(fieldname);
-
-		if (value == null || value.trim().length() == 0) {
-			return null;
-		} else {
-			return value.trim();
-		}
-	}
-
-	 */
-
-
-
 }

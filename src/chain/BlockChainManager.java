@@ -21,7 +21,6 @@ public class BlockChainManager {
 	public static ConcurrentBlockChain concurrentBlockChain;
 	public static Server server;
 	public static Node me;
-	public static Block currentBlock;
 	private static int nbGeneratedTransaction = 0; 
 
 	public BlockChainManager() throws IOException {
@@ -187,6 +186,25 @@ public class BlockChainManager {
 	
 	public Block getPendingBlock(int index) {
 		return me.getPendingBlock(index);
+	}
+
+	public void addPendingTransaction(Transaction transaction) {
+		me.addPendingTransaction(transaction);
+	}
+	
+	public void removePendingTransaction(int index) {
+		me.removePendingTransaction(index);
+	}
+	
+	public void getPendingTransaction(int index) {
+		me.getPendingTransaction(index);
+	}
+
+	public void makeBlockFromPendings() {
+		if(blockChain.getSize()==0) {
+			System.err.println("NO GENESIS BLOCK !");
+		}
+		else me.makeBlockFromPendings(blockChain.getBlockAtIndex(blockChain.getSize()-1));
 	}
 
 }
