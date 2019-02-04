@@ -22,12 +22,11 @@ public class Transaction {
 	}
 
 	// Constructor
-	public Transaction(PublicKey senderPUK, byte[] signature, Payload payload, int id, TransactionTypeEnum type) {
+	public Transaction(PublicKey senderPUK, Payload payload, int id, TransactionTypeEnum type) {
 		this.type = type;
 		this.transactionId = id;
 		this.senderPUK = senderPUK;
 		this.payload = payload;
-		this.signature = signature;
 	}
 
 	// Generate Signature with all wanted protocols

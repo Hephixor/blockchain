@@ -1,28 +1,41 @@
 package network;
 
 
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PublicKey;
+import java.security.Security;
+import java.security.spec.InvalidKeySpecException;
+import java.util.Base64;
 
+import org.bouncycastle.jce.ECNamedCurveTable;
+import org.bouncycastle.jce.spec.ECParameterSpec;
+import org.bouncycastle.jce.spec.ECPublicKeySpec;
+import org.bouncycastle.math.ec.ECCurve;
+import org.bouncycastle.util.encoders.Hex;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import chain.Transaction;
+import chain.TransactionTypeEnum;
+import crypto.Chose;
 import crypto.CryptoUtils;
 
 public class JsonUtils {
 
-	
-	public Payload payloadFromJson(String json) {
-		
+
+	public static Payload payloadFromJson(String json) {
+
 		try {
 			JSONObject payload = new JSONObject(json);
-			
+
 			//C'est un register
 			if(payload.has("event_hash")) {
 				PayloadRegister payloadR = new PayloadRegister(payload.get("event_hash").toString());
 				return payloadR;
 			}
-			
+
 			//C'est un create
 			else {
 				PayloadCreation payloadC = new PayloadCreation(payload.getString("name"),payload.getString("description"),payload.getString("location"),payload.getString("begin"),payload.getString("end_subscription"),payload.getString("end"),payload.getInt("min"),payload.getInt("max"));
@@ -31,24 +44,52 @@ public class JsonUtils {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
-	
-	public Transaction transactionFromJson(String json) {
+
+	public static Transaction transactionFromJson(String json) {
+		System.out.println(json);
 		if(json != null) {
-	//	JSONObject jsonT =  new JSONObject(json);
-		//Transaction transaction = new Transaction(jsonT.getString("signature").getBytes(),)
-		
+			try {
+				JSONObject jsonT =  new JSONObject(json);
+				if(jsonT.getString("type_transact")==("creation")) {
+					Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+			        KeyFactory fact = KeyFactory.getInstance("ECDSA", "BC");
+			        ECParameterSpec spec = ECNamedCurveTable.getParameterSpec("secp256r1");
+			        ECCurve curve = spec.getCurve();
+			        ECPublicKeySpec pubKey = new ECPublicKeySpec(curve.decodePoint(Hex.decode("029e15edf9abdbf2bbcbedad647c881ca6d0a068552f8dc459c4fef3439254103e")),spec);
+			        PublicKey vKey = fact.generatePublic(pubKey);
+			        
+			        Transaction transaction = new Transaction(vKey,payloadFromJson(jsonT.getString("payload")), 0, TransactionTypeEnum.CREATION);
+					return transaction;
+				}
+				// REGISTER
+				else {
+					Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+			        KeyFactory fact = KeyFactory.getInstance("ECDSA", "BC");
+			        ECParameterSpec spec = ECNamedCurveTable.getParameterSpec("secp256r1");
+			        ECCurve curve = spec.getCurve();
+			        ECPublicKeySpec pubKey = new ECPublicKeySpec(curve.decodePoint(Hex.decode("029e15edf9abdbf2bbcbedad647c881ca6d0a068552f8dc459c4fef3439254103e")),spec);
+			        PublicKey vKey = fact.generatePublic(pubKey);
+			        
+			        Transaction transaction = new Transaction(vKey,payloadFromJson(jsonT.get("payload").toString()), 0, TransactionTypeEnum.REGISTER);
+					return transaction;
+				}
+			} catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidKeySpecException | JSONException e) {
+
+				e.printStackTrace();
+			}
+
 		}
 		return null;
 	}
 
-	
 
-	public static JSONObject makeJsonHead(JSONObject json, String pkey, Boolean isRegister)  {
+
+	public static JSONObject makeJsonHead(JSONObject json, PublicKey pkey, Boolean isRegister)  {
 		try {
-			json.put("pub_key", pkey);
+			json.put("pub_key", CryptoUtils.getStringFromKey(pkey));
 
 			if(isRegister) 
 				json.put("type_transact", "register");
@@ -111,17 +152,19 @@ public class JsonUtils {
 		return jsonBloc;
 	}
 
-	public static JSONObject makeJson(String pkey, PayloadCreation payload, String eventHash) {
+	public static JSONObject makeJson(PublicKey pkey, Payload payload, String eventHash) {
 		JSONObject json = new JSONObject();
 
 		try {
-			if(pkey!=null && pkey != "") {				
-				if(payload!=null) {
+			if(pkey != null) {	
+				
+				if(payload!=null && eventHash == "") {
 					makeJsonHead(json, pkey, false);
-					json.put("payload", makeJsonPayload(payload));
+					json.put("payload", makeJsonPayload((PayloadCreation) payload));
 				}
 
 				else {
+					System.out.println("THIS IS A REGISTER");
 					if(eventHash!= null && eventHash != "") {
 						makeJsonHead(json, pkey, true);
 						JSONObject payloadRegister = new JSONObject();
@@ -132,6 +175,7 @@ public class JsonUtils {
 						System.err.println("Error making json please provide at least payload or eventHash");
 					}
 				}
+				
 			}
 
 			else {

@@ -70,7 +70,7 @@ public class BlockChainManager {
 	public String[] makeRegisterTransactionStr(PayloadRegister payload) {
 		// Register transaction
 		JSONObject jsonRegister = new JSONObject();
-		jsonRegister = JsonUtils.makeJson(CryptoUtils.getStringFromKey(me.getPublicKey()), null, payload.getEventHash());
+		jsonRegister = JsonUtils.makeJson(me.getPublicKey(), null, payload.getEventHash());
 		System.out.println("\n===== Event Register Json Created \n");
 		String transaction[] = {jsonRegister.toString()};
 		return transaction;
@@ -79,7 +79,7 @@ public class BlockChainManager {
 	public String[] makeRegisterTransactionStrFromTransaction(Transaction transaction) {
 		// Register transaction
 		JSONObject jsonRegister = new JSONObject();
-		jsonRegister = JsonUtils.makeJson(CryptoUtils.getStringFromKey(me.getPublicKey()), null, ((PayloadRegister) transaction.getPayload()).getEventHash());
+		jsonRegister = JsonUtils.makeJson(me.getPublicKey(), null, ((PayloadRegister) transaction.getPayload()).getEventHash());
 		System.out.println("\n===== Event Register Json Created \n");
 		String transactionStr[] = {jsonRegister.toString()};
 		return transactionStr;
@@ -87,7 +87,7 @@ public class BlockChainManager {
 
 	public String[] makeCreateTransactionStr(PayloadCreation payload) {
 		JSONObject jsonCreation = new JSONObject();
-		jsonCreation = JsonUtils.makeJson(CryptoUtils.getStringFromKey(me.getPublicKey()), payload, "0");
+		jsonCreation = JsonUtils.makeJson(me.getPublicKey(), payload, "0");
 		System.out.println("\n===== Event Creation Json ===== \n");
 		String transaction[] = {jsonCreation.toString()};
 		return transaction;
@@ -95,7 +95,7 @@ public class BlockChainManager {
 	
 	public String[] makeCreateTransactionStrFromTransaction(Transaction transaction) {
 		JSONObject jsonCreation = new JSONObject();
-		jsonCreation = JsonUtils.makeJson(CryptoUtils.getStringFromKey(me.getPublicKey()), (PayloadCreation) transaction.getPayload(), "0");
+		jsonCreation = JsonUtils.makeJson(me.getPublicKey(), (PayloadCreation) transaction.getPayload(), "0");
 		System.out.println("\n===== Event Creation Json ===== \n");
 		String transactionStr[] = {jsonCreation.toString()};
 		return transactionStr;
