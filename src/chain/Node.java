@@ -44,58 +44,58 @@ public class Node {
 		}
 	}
 
-	
+
 
 	// Sign transaction
 	public Transaction signTransaction(Transaction transaction) {
 		transaction.generateSignature(privateKey);
 		return transaction;
 	}
-	
+
 	// Add to transactions list
 	public void addTransaction(Transaction transaction) {
 		transactions.add(transaction);
 	}
-	
+
 	public void displayTransactions() {
 		for (Transaction transaction : transactions) {
 			System.out.println(transaction.toString());
 		}
 	}
-	
+
 	public void addPendingBlock(Block block) {
 		pendingBlocks.add(block);
 	}
-	
+
 	public void removePendingBlock(int index) {
 		pendingBlocks.remove(index);
 	}
-	
+
 	public Block getPendingBlock(int index) {
 		return pendingBlocks.get(index);
 	}
-	
+
 	public boolean pending() {
 		return(pendingBlocks.size()!=0);
 	}
-	
+
 	public void addPendingTransaction(Transaction transaction) {
 		pendingTransactions.add(transaction);
 	}
-	
+
 	public void removePendingTransaction(int index) {
 		pendingBlocks.remove(index);
 	}
-	
+
 	public Transaction getPendingTransaction(int index) {
 		return pendingTransactions.get(index);
 	}
-	
+
 	public boolean pendingTransaction() {
 		return(pendingTransactions.size()!=0);
 	}
-	
-	
+
+
 	public PrivateKey getPrivateKey() {
 		return this.privateKey;
 	}
@@ -105,8 +105,9 @@ public class Node {
 	}
 
 	public void displayPendingTransaction() {
+		System.err.println(pendingTransactions.size()+" Pending Transaction");
 		for (Transaction transaction : pendingTransactions) {
-			transaction.toString();
+			System.out.println(transaction.toString());
 		}
 	}
 
@@ -115,15 +116,31 @@ public class Node {
 		for (Transaction transaction : pendingTransactions) {
 			trs.add(transaction.toString());
 		}
-		
+
 		String roothash = Convert.bytesToHex(Merkle.getRootHash(trs));
-		
 		Block currentBlock = new Block(previousBlock.getHash(), previousBlock.getLevel()+1, previousBlock.getTime()+1,roothash);
-		for(int i = 0 ; i < currentBlock.getMaxTransaction(); i++) {
-			currentBlock.addTransaction(pendingTransactions.get(i));
-			transactions.add(pendingTransactions.get(i));
-			pendingTransactions.remove(i);
+		int i=0;
+		while(i<pendingTransactions.size()) {
+				Transaction tmpT = pendingTransactions.get(0);
+				pendingTransactions.remove(0);
+				currentBlock.addTransaction(tmpT);
+				transactions.add(tmpT);
+			
 		}
+
+		pendingBlocks.add(currentBlock);
+	}
+	
+	public int getNbPendingBlock() {
+		return pendingBlocks.size();
+	}
+	
+	public int getNbPendingTransactions() {
+		return pendingTransactions.size();
+	}
+	
+	public int getNbTransactions() {
+		return transactions.size();
 	}
 
 

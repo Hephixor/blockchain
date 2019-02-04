@@ -47,7 +47,7 @@ public class Block {
 			}
 			else {
 				transactions.add(transaction);
-				System.out.println("Transaction added");
+				//System.out.println("Transaction added");
 				return true;
 			}
 		}

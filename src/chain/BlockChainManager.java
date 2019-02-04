@@ -119,7 +119,7 @@ public class BlockChainManager {
 		String roothash = "0" ;
 		Block genesis = createNewBlock(roothash);
 		blockChain.addBlock(genesis);
-		System.out.println(" ==== Genesis Block Created");
+		//System.out.println(" ==== Genesis Block Created");
 	}
 
 	public boolean isChainValid() {
@@ -205,6 +205,18 @@ public class BlockChainManager {
 			System.err.println("NO GENESIS BLOCK !");
 		}
 		else me.makeBlockFromPendings(blockChain.getBlockAtIndex(blockChain.getSize()-1));
+	}
+	
+	public int getNbPendingBlocks() {
+		return me.getNbPendingBlock();
+	}
+	
+	public int getNbPendingTransactions() {
+		return me.getNbPendingTransactions();
+	}
+	
+	public int getNbTransactions() {
+		return me.getNbTransactions();
 	}
 
 }

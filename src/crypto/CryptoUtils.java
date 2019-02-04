@@ -38,10 +38,10 @@ public class CryptoUtils {
 			sig.update(data);
 			if (!sig.verify(signatureBytes))
 			{
-				System.out.println("Fail");
+				//System.out.println("Fail");
 				return false;
 			} else {
-				System.out.println("Good");
+				//System.out.println("Good");
 				return true;
 			}
 		} catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidKeyException | SignatureException e) {

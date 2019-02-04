@@ -121,6 +121,56 @@ public class InterfaceCommand {
 					blockChainManager.makeBlockFromPendings();
 					break;
 					
+				case 11:
+					// 1
+					displayStatus();
+					System.err.println("Adding Genesis");
+					blockChainManager.makeGenesis();
+					displayStatus();
+					
+					// 2
+					System.err.println("Adding transaction CREATE");
+					DateFormat d = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+					Calendar c = Calendar.getInstance();
+					Date t = c.getTime();        
+					String dateB = d.format(t);
+					c.add(Calendar.DAY_OF_MONTH, 7);
+					String dateES = d.format(t);
+					c.add(Calendar.DAY_OF_MONTH, 7);
+					String dateE = d.format(t);
+					// Make payload from data
+					PayloadCreation payloadT = new PayloadCreation("TestNom","TestDescription","TestLieu", dateB, dateES, dateE, 1 , 10);
+					// Make transaction from payload
+					Transaction transactionT = new Transaction(blockChainManager.getMe().getPublicKey(), blockChainManager.getMe().getPrivateKey(), payloadT, blockChainManager.getNextId(),TransactionTypeEnum.CREATION);
+					// Add transaction to list
+					blockChainManager.addPendingTransaction(transactionT);
+					displayStatus();
+					
+					// 3
+					System.err.println("Adding transaction REGISTER");
+					// Make payload from data
+					PayloadRegister payloadTT = new PayloadRegister("EventHash");
+					// Make transaction from payload
+					Transaction transactionTT = new Transaction(blockChainManager.getMe().getPublicKey(), blockChainManager.getMe().getPrivateKey(), payloadTT, blockChainManager.getNextId(), TransactionTypeEnum.REGISTER); 
+					// Add transaction to list
+					blockChainManager.addPendingTransaction(transactionTT);
+					displayStatus();
+					
+					// 4
+					System.err.println("Adding transactions to a block");
+					blockChainManager.makeBlockFromPendings();
+					displayStatus();
+					
+					// 5
+					System.err.println("Pushing Block to BlockChain");
+					blockChainManager.pushBlock();
+					displayStatus();
+					
+					// 5
+					System.err.println("BlockChain is valid : " + blockChainManager.isChainValid());
+					
+					break;
+					
 					
 				default:
 					break;
@@ -148,7 +198,12 @@ public class InterfaceCommand {
 		System.out.println(" 8. Display node transactions ");
 		System.out.println(" 9. Display pending transactions ");
 		System.out.println(" 10.Make block from pending transactions ");
+		System.out.println(" 11.Run full test ");
 		System.out.println(" ================================================== \n");
+	}
+	
+	public static void displayStatus() {
+		System.err.println("BlockChain Size : " + blockChainManager.getBlockChain().getSize() + " | Pending Blocks : " + blockChainManager.getNbPendingBlocks() + " | Pending transactions : " + blockChainManager.getNbPendingTransactions() +" | Effective Transactions : "+ blockChainManager.getNbTransactions());
 	}
 
 }
