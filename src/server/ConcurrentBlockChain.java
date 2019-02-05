@@ -41,7 +41,7 @@ public class ConcurrentBlockChain {
         return new Blocks(blocks);
     }
 
-    public void pushBendingBlocks() {
+    public void pushBendingBlock() {
         blockChainLock.writeLock().lock();
         blockChainManager.makeBlockFromPendings();
         Block lastBlock = null;
@@ -59,6 +59,7 @@ public class ConcurrentBlockChain {
 
     public boolean addBlock(Block block, int emitterId) {
         boolean added = false;
+        System.out.println("Received block:\n" + block);
         blockChainLock.writeLock().lock();
         if (checkBlock(block, emitterId)) {
             blockChainManager.addBlockToBlockChain(block);
@@ -78,7 +79,7 @@ public class ConcurrentBlockChain {
         }
 
         int expectedId = server.getConsensusManager().leaderAtTime(block.getTimeStamp());
-        if (expectedId != emitterId) {
+        if (emitterId != server.getConsensusManager().getCurrentLeader() && expectedId != emitterId) {
             System.err.println("Attempt to create a block from a non leader node: " + emitterId);
             return false;
         }

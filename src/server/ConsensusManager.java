@@ -21,10 +21,10 @@ public class ConsensusManager implements Runnable {
     @Override
     public void run() {
         Runnable task = () -> {
-            int currentLeader = computeCurrentLeader();
+            int currentLeader = getCurrentLeader();
             System.out.println("The leader is now " + currentLeader);
             if (currentLeader == server.getNodeId()) {
-                server.getChain().pushBendingBlocks();
+                server.getChain().pushBendingBlock();
             }
         };
         scheduler.scheduleAtFixedRate(task, 0, INTERVAL_IN_MILLIS, TimeUnit.MILLISECONDS);
@@ -33,7 +33,7 @@ public class ConsensusManager implements Runnable {
     /**
      * Returns the id of the current leader.
      */
-    private int computeCurrentLeader() {
+    public int getCurrentLeader() {
         return leaderAtNthInterval(currentIntervalNumber());
     }
 

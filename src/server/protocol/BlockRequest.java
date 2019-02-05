@@ -43,7 +43,7 @@ public class BlockRequest extends Request {
 
     public static String stringOfBlock(Block b) {
         String formatString =
-                "{\"level\":%d,\"hash\":\"%s\",\"previous_hash\":\"%s\",\"timestamp\":%s,\"merkleRoot\":\"%s\"}";
+                "{\"level\":%d,\"hash\":\"%s\",\"previous_hash\":\"%s\",\"timestamp\":\"%s\",\"merkle_root\":\"%s\"}";
         Instant timeStamp = Instant.ofEpochMilli(b.getTimeStamp());
         return String.format(formatString, b.getLevel(), b.getHash(),
                 b.getPreviousHash(), timeStamp.toString(), b.getMerkleRoot());
