@@ -111,34 +111,36 @@ public class Node {
 		}
 	}
 
-	public void makeBlockFromPendings(Block previousBlock) {		
-		ArrayList<String> trs = new ArrayList<String>();
-		for (Transaction transaction : pendingTransactions) {
-			trs.add(transaction.toString());
-		}
+	public void makeBlockFromPendings(Block previousBlock) {
+		if(pendingTransactions.size()!=0) {
+			ArrayList<String> trs = new ArrayList<String>();
+			for (Transaction transaction : pendingTransactions) {
+				trs.add(transaction.toString());
+			}
 
-		String roothash = Convert.bytesToHex(Merkle.getRootHash(trs));
-		Block currentBlock = new Block(previousBlock.getHash(), previousBlock.getLevel()+1, previousBlock.getTime()+1,roothash);
-		int i=0;
-		while(i<pendingTransactions.size()) {
+			String roothash = Convert.bytesToHex(Merkle.getRootHash(trs));
+			Block currentBlock = new Block(previousBlock.getHash(), previousBlock.getLevel()+1, previousBlock.getTime()+1,roothash);
+			int i=0;
+			while(i<pendingTransactions.size()) {
 				Transaction tmpT = pendingTransactions.get(0);
 				pendingTransactions.remove(0);
 				currentBlock.addTransaction(tmpT);
 				transactions.add(tmpT);
-			
-		}
 
-		pendingBlocks.add(currentBlock);
+			}
+
+			pendingBlocks.add(currentBlock);
+		}
 	}
-	
+
 	public int getNbPendingBlock() {
 		return pendingBlocks.size();
 	}
-	
+
 	public int getNbPendingTransactions() {
 		return pendingTransactions.size();
 	}
-	
+
 	public int getNbTransactions() {
 		return transactions.size();
 	}
