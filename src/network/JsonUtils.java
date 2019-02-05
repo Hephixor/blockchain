@@ -7,8 +7,6 @@ import java.security.NoSuchProviderException;
 import java.security.PublicKey;
 import java.security.Security;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Base64;
-
 import org.bouncycastle.jce.ECNamedCurveTable;
 import org.bouncycastle.jce.spec.ECParameterSpec;
 import org.bouncycastle.jce.spec.ECPublicKeySpec;
@@ -19,7 +17,6 @@ import org.json.JSONObject;
 
 import chain.Transaction;
 import chain.TransactionTypeEnum;
-import crypto.Chose;
 import crypto.CryptoUtils;
 
 public class JsonUtils {

@@ -9,7 +9,7 @@ public class BlockChain {
 	public BlockChain() {
 		blocks = new ArrayList<Block>();
 	}
-
+ 
 	public BlockChain(Block genesis) {
 		blocks = new ArrayList<Block>();
 		addBlock(genesis);

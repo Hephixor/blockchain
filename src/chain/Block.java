@@ -42,14 +42,9 @@ public class Block {
 			return false;		
 		}
 		else {
-			if(!transaction.verifiySignature()) {
-				return false;
-			}
-			else {
+			
 				transactions.add(transaction);
-				//System.out.println("Transaction added");
 				return true;
-			}
 		}
 
 	}
